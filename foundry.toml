@@ -3,4 +3,40 @@ src = "src"
 out = "out"
 libs = ["lib"]
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+# See more config options https://github.com/foundry-rs/foundry/tree/master/config
+
+solc = "0.8.19"
+
+# Try to make sure the optimizer doesn't touch the output in a way that can break
+# source maps for debugging.
+# via_ir = false
+# optimizer = false
+# optimizer_runs = 0
+# optimizer_steps = 0
+
+# These settings should be used for snapshots
+optimizer = true
+optimizer_runs = 1000000
+
+bytecode_hash = "none"
+cbor_metadata = false
+
+fs_permissions = [{ access = "read", path = "out/reference/UniswapV2LibraryConcrete.sol/UniswapV2LibraryConcrete.json"}]
+
+[fuzz]
+runs = 2048
+
+[profile.reference]
+
+solc = "0.6.6"
+src = "reference/src"
+test = 'reference/test'
+script = 'reference/script'
+out = "out/reference/"
+libs = ["reference/lib"]
+remappings = [
+    "v2-core/=reference/lib/v2-core/",
+    "v2-periphery/=reference/lib/v2-periphery/",
+    "@uniswap/v2-core/=reference/lib/v2-core/",
+    "@uniswap/v2-periphery/=reference/lib/v2-periphery/",
+]
