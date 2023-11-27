@@ -1,0 +1,5 @@
+LibUniswapV2QuoteTest:testQuoteHappy(uint256,uint256,uint256) (runs: 2048, μ: 14581, ~: 14497)
+LibUniswapV2QuoteTest:testQuoteOverflow(uint256,uint256,uint256) (runs: 2048, μ: 17206, ~: 17199)
+LibUniswapV2QuoteTest:testQuoteZeroAmount(uint256,uint256) (runs: 2048, μ: 15464, ~: 15442)
+LibUniswapV2QuoteTest:testQuoteZeroReserveA(uint256,uint256) (runs: 2048, μ: 16021, ~: 15956)
+LibUniswapV2QuoteTest:testQuoteZeroReserveB(uint256,uint256) (runs: 2048, μ: 15587, ~: 15565)

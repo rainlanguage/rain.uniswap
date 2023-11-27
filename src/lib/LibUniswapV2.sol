@@ -3,6 +3,7 @@ pragma solidity ^0.8.18;
 
 import {IUniswapV2Pair} from "../interface/IUniswapV2Pair.sol";
 import {IUniswapV2Factory} from "../interface/IUniswapV2Factory.sol";
+import {UniswapV2ZeroAmount, UniswapV2ZeroLiquidity} from "../error/ErrUniswapV2.sol";
 
 /// UniswapV2Library from uniswap/v2-periphery is compiled with a version of
 /// SafeMath that is locked to Solidity 0.6.x which means we can't use it in
@@ -85,8 +86,12 @@ library LibUniswapV2 {
 
     /// Copy of UniswapV2Library.quote for solidity 0.8.x support.
     function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) internal pure returns (uint256 amountB) {
-        require(amountA > 0, "UniswapV2Library: INSUFFICIENT_AMOUNT");
-        require(reserveA > 0 && reserveB > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
+        if (amountA == 0) {
+            revert UniswapV2ZeroAmount();
+        }
+        if (reserveA == 0 || reserveB == 0) {
+            revert UniswapV2ZeroLiquidity();
+        }
         amountB = (amountA * reserveB) / reserveA;
     }
 
