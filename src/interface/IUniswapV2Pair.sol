@@ -15,7 +15,11 @@ interface IUniswapV2Pair {
     function transfer(address to, uint256 value) external returns (bool);
     function transferFrom(address from, address to, uint256 value) external returns (bool);
 
+    // Can't modify this as it comes from uniswap.
+    //slither-disable-next-line unused-state naming-convention
     function DOMAIN_SEPARATOR() external view returns (bytes32);
+    // Can't modify this as it comes from uniswap.
+    //slither-disable-next-line unused-state naming-convention
     function PERMIT_TYPEHASH() external pure returns (bytes32);
     function nonces(address owner) external view returns (uint256);
 
@@ -34,6 +38,8 @@ interface IUniswapV2Pair {
     );
     event Sync(uint112 reserve0, uint112 reserve1);
 
+    // Can't modify this as it comes from uniswap.
+    //slither-disable-next-line unused-state naming-convention
     function MINIMUM_LIQUIDITY() external pure returns (uint256);
     function factory() external view returns (address);
     function token0() external view returns (address);
