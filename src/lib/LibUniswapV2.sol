@@ -3,7 +3,14 @@ pragma solidity ^0.8.18;
 
 import {IUniswapV2Pair} from "../interface/IUniswapV2Pair.sol";
 import {IUniswapV2Factory} from "../interface/IUniswapV2Factory.sol";
-import {UniswapV2ZeroAmount, UniswapV2ZeroLiquidity} from "../error/ErrUniswapV2.sol";
+import {
+    UniswapV2ZeroAmount,
+    UniswapV2ZeroOutputAmount,
+    UniswapV2IdenticalAddresses,
+    UniswapV2ZeroAddress,
+    UniswapV2ZeroLiquidity,
+    UniswapV2ZeroInputAmount
+} from "../error/ErrUniswapV2.sol";
 
 /// UniswapV2Library from uniswap/v2-periphery is compiled with a version of
 /// SafeMath that is locked to Solidity 0.6.x which means we can't use it in
@@ -15,9 +22,13 @@ import {UniswapV2ZeroAmount, UniswapV2ZeroLiquidity} from "../error/ErrUniswapV2
 library LibUniswapV2 {
     /// Copy of UniswapV2Library.sortTokens for solidity 0.8.x support.
     function sortTokens(address tokenA, address tokenB) internal pure returns (address token0, address token1) {
-        require(tokenA != tokenB, "UniswapV2Library: IDENTICAL_ADDRESSES");
+        if (tokenA == tokenB) {
+            revert UniswapV2IdenticalAddresses();
+        }
         (token0, token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
-        require(token0 != address(0), "UniswapV2Library: ZERO_ADDRESS");
+        if (token0 == address(0)) {
+            revert UniswapV2ZeroAddress();
+        }
     }
 
     /// Copy of UniswapV2Library.pairFor for solidity 0.8.x support.
@@ -63,8 +74,12 @@ library LibUniswapV2 {
         pure
         returns (uint256 amountIn)
     {
-        require(amountOut > 0, "UniswapV2Library: INSUFFICIENT_OUTPUT_AMOUNT");
-        require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
+        if (amountOut == 0) {
+            revert UniswapV2ZeroOutputAmount();
+        }
+        if (reserveIn == 0 || reserveOut == 0) {
+            revert UniswapV2ZeroLiquidity();
+        }
         uint256 numerator = reserveIn * amountOut * 1000;
         uint256 denominator = (reserveOut - amountOut) * 997;
         amountIn = (numerator / denominator) + 1;
@@ -76,8 +91,13 @@ library LibUniswapV2 {
         pure
         returns (uint256 amountOut)
     {
-        require(amountIn > 0, "UniswapV2Library: INSUFFICIENT_INPUT_AMOUNT");
-        require(reserveIn > 0 && reserveOut > 0, "UniswapV2Library: INSUFFICIENT_LIQUIDITY");
+        if (amountIn == 0) {
+            revert UniswapV2ZeroInputAmount();
+        }
+        if (reserveIn == 0 || reserveOut == 0) {
+            revert UniswapV2ZeroLiquidity();
+        }
+
         uint256 amountInWithFee = amountIn * 997;
         uint256 numerator = amountInWithFee * reserveOut;
         uint256 denominator = (reserveIn * 1000) + amountInWithFee;
