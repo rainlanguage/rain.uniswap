@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import {IUniswapV2Pair} from "../interface/IUniswapV2Pair.sol";
-import {IUniswapV2Factory} from "../interface/IUniswapV2Factory.sol";
+import {IUniswapV2Pair} from "../interface/v2/IUniswapV2Pair.sol";
+import {IUniswapV2Factory} from "../interface/v2/IUniswapV2Factory.sol";
 import {
     UniswapV2ZeroAmount,
     UniswapV2ZeroOutputAmount,
