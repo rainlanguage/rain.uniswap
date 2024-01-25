@@ -4,11 +4,13 @@ pragma solidity ^0.8.18;
 import {IUniswapV3PoolActions} from "../interface/v3/IUniswapV3PoolActions.sol";
 import {IUniswapV3PoolState} from "../interface/v3/IUniswapV3PoolState.sol";
 import {IUniswapV3PoolImmutables} from "../interface/v3/IUniswapV3PoolImmutables.sol";
-import {FullMath8x} from "./FullMath8x.sol";
 import {TickMath8x} from "./TickMath8x.sol";
 import {LiquidityMath8x} from "./LiquidityMath8x.sol";
 import {FixedPoint1288x} from "./FixedPoint1288x.sol";
 import {SwapMath8x} from "./SwapMath8x.sol";
+import {BitMath8x} from "./BitMath8x.sol";
+import {TickBitmap8x} from "./TickBitmap8x.sol";
+import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
 struct SwapCache {
     // the protocol fee for the input token
@@ -86,6 +88,51 @@ library LibUniswapV3 {
         return uint32(block.timestamp); // truncation is desired
     }
 
+    /// @notice Returns the next initialized tick contained in the same word (or adjacent word) as the tick that is either
+    /// to the left (less than or equal to) or right (greater than) of the given tick
+    /// @param pool The pool containing the tick bitmap
+    /// @param tick The starting tick
+    /// @param tickSpacing The spacing between usable ticks
+    /// @param lte Whether to search for the next initialized tick to the left (less than or equal to the starting tick)
+    /// @return next The next initialized or uninitialized tick up to 256 ticks away from the current tick
+    /// @return initialized Whether the next tick is initialized, as the function only searches within up to 256 ticks
+    function nextInitializedTickWithinOneWord(
+        IUniswapV3PoolLite pool,
+        int24 tick,
+        int24 tickSpacing,
+        bool lte
+    ) internal view returns (int24 next, bool initialized) {
+        int24 compressed = tick / tickSpacing;
+        if (tick < 0 && tick % tickSpacing != 0) compressed--; // round towards negative infinity
+
+        if (lte) {
+            (int16 wordPos, uint8 bitPos) = TickBitmap8x.position(compressed);
+            // all the 1s at or to the right of the current bitPos
+            uint256 mask = (1 << bitPos) - 1 + (1 << bitPos);
+            uint256 masked = pool.tickBitmap(wordPos) & mask;
+
+            // if there are no initialized ticks to the right of or at the current tick, return rightmost in the word
+            initialized = masked != 0;
+            // overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
+            next = initialized
+                ? (compressed - int24(bitPos - BitMath8x.mostSignificantBit(masked))) * tickSpacing
+                : (compressed - int24(bitPos)) * tickSpacing;
+        } else {
+            // start from the word of the next tick, since the current tick state doesn't matter
+            (int16 wordPos, uint8 bitPos) = TickBitmap8x.position(compressed + 1);
+            // all the 1s at or to the left of the bitPos
+            uint256 mask = ~((1 << bitPos) - 1);
+            uint256 masked = pool.tickBitmap(wordPos) & mask;
+
+            // if there are no initialized ticks to the left of the current tick, return leftmost in the word
+            initialized = masked != 0;
+            // overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
+            next = initialized
+                ? (compressed + 1 + int24(BitMath8x.leastSignificantBit(masked) - bitPos)) * tickSpacing
+                : (compressed + 1 + int24(type(uint8).max - bitPos)) * tickSpacing;
+        }
+    }
+
     function swap(
         IUniswapV3PoolLite pool,
         address recipient,
@@ -136,7 +183,7 @@ library LibUniswapV3 {
             step.sqrtPriceStartX96 = state.sqrtPriceX96;
 
             (step.tickNext, step.initialized) =
-                pool.tickBitmap().nextInitializedTickWithinOneWord(state.tick, pool.tickSpacing(), zeroForOne);
+                pool.nextInitializedTickWithinOneWord(state.tick, pool.tickSpacing(), zeroForOne);
 
             // ensure that we do not overshoot the min/max tick, as the tick bitmap is not aware of these bounds
             if (step.tickNext < TickMath8x.MIN_TICK) {
@@ -176,7 +223,7 @@ library LibUniswapV3 {
 
             // update global fee tracker
             if (state.liquidity > 0) {
-                state.feeGrowthGlobalX128 += FullMath8x.mulDiv(step.feeAmount, FixedPoint1288x.Q128, state.liquidity);
+                state.feeGrowthGlobalX128 += Math.mulDiv(step.feeAmount, FixedPoint1288x.Q128, state.liquidity);
             }
 
             // shift tick if we reached the next price

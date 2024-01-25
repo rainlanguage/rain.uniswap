@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.18;
 
-import "./FullMath8x.sol";
+import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "./SqrtPriceMath8x.sol";
 
 /// @title Computes the result of a swap within ticks
@@ -30,7 +30,7 @@ library SwapMath8x {
             bool exactIn = amountRemaining >= 0;
 
             if (exactIn) {
-                uint256 amountRemainingLessFee = FullMath8x.mulDiv(uint256(amountRemaining), 1e6 - feePips, 1e6);
+                uint256 amountRemainingLessFee = Math.mulDiv(uint256(amountRemaining), 1e6 - feePips, 1e6);
                 amountIn = zeroForOne
                     ? SqrtPriceMath8x.getAmount0Delta(sqrtRatioTargetX96, sqrtRatioCurrentX96, liquidity, true)
                     : SqrtPriceMath8x.getAmount1Delta(sqrtRatioCurrentX96, sqrtRatioTargetX96, liquidity, true);
@@ -82,7 +82,7 @@ library SwapMath8x {
                 // we didn't reach the target, so take the remainder of the maximum input as fee
                 feeAmount = uint256(amountRemaining) - amountIn;
             } else {
-                feeAmount = FullMath8x.mulDivRoundingUp(amountIn, feePips, 1e6 - feePips);
+                feeAmount = Math.mulDiv(amountIn, feePips, 1e6 - feePips, Math.Rounding.Up);
             }
         }
     }

@@ -4,7 +4,7 @@ pragma solidity ^0.8.18;
 import "./LowGasSafeMath8x.sol";
 import "./SafeCast8x.sol";
 
-import "./FullMath8x.sol";
+import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import "./UnsafeMath8x.sol";
 import "./FixedPoint968x.sol";
 
@@ -42,7 +42,7 @@ library SqrtPriceMath8x {
                     uint256 denominator = numerator1 + product;
                     if (denominator >= numerator1) {
                         // always fits in 160 bits
-                        return uint160(FullMath8x.mulDivRoundingUp(numerator1, sqrtPX96, denominator));
+                        return uint160(Math.mulDiv(numerator1, sqrtPX96, denominator, Math.Rounding.Up));
                     }
                 }
 
@@ -53,7 +53,7 @@ library SqrtPriceMath8x {
                 // in addition, we must check that the denominator does not underflow
                 require((product = amount * sqrtPX96) / amount == sqrtPX96 && numerator1 > product);
                 uint256 denominator = numerator1 - product;
-                return FullMath8x.mulDivRoundingUp(numerator1, sqrtPX96, denominator).toUint160();
+                return Math.mulDiv(numerator1, sqrtPX96, denominator, Math.Rounding.Up).toUint160();
             }
         }
     }
@@ -81,7 +81,7 @@ library SqrtPriceMath8x {
                 uint256 quotient = (
                     amount <= type(uint160).max
                         ? (amount << FixedPoint968x.RESOLUTION) / liquidity
-                        : FullMath8x.mulDiv(amount, FixedPoint968x.Q96, liquidity)
+                        : Math.mulDiv(amount, FixedPoint968x.Q96, liquidity)
                 );
 
                 return uint256(sqrtPX96).add(quotient).toUint160();
@@ -89,7 +89,7 @@ library SqrtPriceMath8x {
                 uint256 quotient = (
                     amount <= type(uint160).max
                         ? UnsafeMath8x.divRoundingUp(amount << FixedPoint968x.RESOLUTION, liquidity)
-                        : FullMath8x.mulDivRoundingUp(amount, FixedPoint968x.Q96, liquidity)
+                        : Math.mulDiv(amount, FixedPoint968x.Q96, liquidity, Math.Rounding.Up)
                 );
 
                 require(sqrtPX96 > quotient);
@@ -169,9 +169,10 @@ library SqrtPriceMath8x {
 
             require(sqrtRatioAX96 > 0);
 
+            // Using OZ Math.
             return roundUp
-                ? UnsafeMath8x.divRoundingUp(FullMath8x.mulDivRoundingUp(numerator1, numerator2, sqrtRatioBX96), sqrtRatioAX96)
-                : FullMath8x.mulDiv(numerator1, numerator2, sqrtRatioBX96) / sqrtRatioAX96;
+                ? UnsafeMath8x.divRoundingUp(Math.mulDiv(numerator1, numerator2, sqrtRatioBX96, Math.Rounding.Up), sqrtRatioAX96)
+                : Math.mulDiv(numerator1, numerator2, sqrtRatioBX96) / sqrtRatioAX96;
         }
     }
 
@@ -191,9 +192,10 @@ library SqrtPriceMath8x {
         unchecked {
             if (sqrtRatioAX96 > sqrtRatioBX96) (sqrtRatioAX96, sqrtRatioBX96) = (sqrtRatioBX96, sqrtRatioAX96);
 
+            // Using OZ math.
             return roundUp
-                ? FullMath8x.mulDivRoundingUp(liquidity, sqrtRatioBX96 - sqrtRatioAX96, FixedPoint968x.Q96)
-                : FullMath8x.mulDiv(liquidity, sqrtRatioBX96 - sqrtRatioAX96, FixedPoint968x.Q96);
+                ? Math.mulDiv(liquidity, sqrtRatioBX96 - sqrtRatioAX96, FixedPoint968x.Q96, Math.Rounding.Up)
+                : Math.mulDiv(liquidity, sqrtRatioBX96 - sqrtRatioAX96, FixedPoint968x.Q96);
         }
     }
 
