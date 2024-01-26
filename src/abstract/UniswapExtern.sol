@@ -3,6 +3,9 @@ pragma solidity =0.8.19;
 
 import {BaseRainterpreterExternNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterExternNPE2.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
+import {LibOpUniswapV2AmountIn} from "../lib/op/LibOpUniswapV2AmountIn.sol";
+import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
+import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
 bytes constant INTEGRITY_FUNCTION_POINTERS = hex"";
