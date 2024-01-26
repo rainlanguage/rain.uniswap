@@ -25,7 +25,8 @@ library TickMath8x {
         // Added unchecked to restore pre-0.8.0 behavior
         unchecked {
             uint256 absTick = tick < 0 ? uint256(-int256(tick)) : uint256(int256(tick));
-            require(absTick <= uint256(MAX_TICK), "T");
+            // Fixed a cast here that was disallowed in 0.8.x
+            require(absTick <= uint256(int256(MAX_TICK)), "T");
 
             uint256 ratio =
                 absTick & 0x1 != 0 ? 0xfffcb933bd6fad37aa2d162d1a594001 : 0x100000000000000000000000000000000;

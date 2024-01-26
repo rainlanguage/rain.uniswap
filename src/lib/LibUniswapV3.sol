@@ -11,6 +11,8 @@ import {SwapMath8x} from "./SwapMath8x.sol";
 import {BitMath8x} from "./BitMath8x.sol";
 import {TickBitmap8x} from "./TickBitmap8x.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
+import {SafeCast8x} from "./SafeCast8x.sol";
+import {LowGasSafeMath8x} from "./LowGasSafeMath8x.sol";
 
 struct SwapCache {
     // the protocol fee for the input token
@@ -80,12 +82,108 @@ struct Slot0 {
     bool unlocked;
 }
 
+struct Observation {
+    // the block timestamp of the observation
+    uint32 blockTimestamp;
+    // the tick accumulator, i.e. tick * time elapsed since the pool was first initialized
+    int56 tickCumulative;
+    // the seconds per liquidity, i.e. seconds elapsed / max(1, liquidity) since the pool was first initialized
+    uint160 secondsPerLiquidityCumulativeX128;
+    // whether or not the observation is initialized
+    bool initialized;
+}
+
 interface IUniswapV3PoolLite is IUniswapV3PoolActions, IUniswapV3PoolState, IUniswapV3PoolImmutables {}
 
 library LibUniswapV3 {
+    using SafeCast8x for uint256;
+    using LowGasSafeMath8x for uint256;
+    using LowGasSafeMath8x for int256;
+
     /// Mimics internal function of same name in UniswapV3Pool.sol
     function _blockTimestamp() internal view returns (uint32) {
         return uint32(block.timestamp); // truncation is desired
+    }
+
+    /// @notice Transforms a previous observation into a new observation, given the passage of time and the current tick and liquidity values
+    /// @dev blockTimestamp _must_ be chronologically equal to or greater than last.blockTimestamp, safe for 0 or 1 overflows
+    /// @param last The specified observation to be transformed
+    /// @param blockTimestamp The timestamp of the new observation
+    /// @param tick The active tick at the time of the new observation
+    /// @param liquidity The total in-range liquidity at the time of the new observation
+    /// @return Observation The newly populated observation
+    function transform(
+        Observation memory last,
+        uint32 blockTimestamp,
+        int24 tick,
+        uint128 liquidity
+    ) internal pure returns (Observation memory) {
+        uint32 delta = blockTimestamp - last.blockTimestamp;
+        return
+            Observation({
+                blockTimestamp: blockTimestamp,
+                tickCumulative: last.tickCumulative + int56(tick) * delta,
+                secondsPerLiquidityCumulativeX128: last.secondsPerLiquidityCumulativeX128 +
+                    ((uint160(delta) << 128) / (liquidity > 0 ? liquidity : 1)),
+                initialized: true
+            });
+    }
+
+    /// @dev Reverts if an observation at or before the desired observation timestamp does not exist.
+    /// 0 may be passed as `secondsAgo' to return the current cumulative values.
+    /// If called with a timestamp falling between two observations, returns the counterfactual accumulator values
+    /// at exactly the timestamp between the two observations.
+    /// @param pool The pool to observe
+    /// @param time The current block timestamp
+    /// @param secondsAgo The amount of time to look back, in seconds, at which point to return an observation
+    /// @param tick The current tick
+    /// @param index The index of the observation that was most recently written to the observations array
+    /// @param liquidity The current in-range pool liquidity
+    /// @param cardinality The number of populated elements in the oracle array
+    /// @return tickCumulative The tick * time elapsed since the pool was first initialized, as of `secondsAgo`
+    /// @return secondsPerLiquidityCumulativeX128 The time elapsed / max(1, liquidity) since the pool was first initialized, as of `secondsAgo`
+    function observeSingle(
+        IUniswapV3PoolLite pool,
+        uint32 time,
+        uint32 secondsAgo,
+        int24 tick,
+        uint16 index,
+        uint128 liquidity,
+        uint16 cardinality
+    ) internal view returns (int56 tickCumulative, uint160 secondsPerLiquidityCumulativeX128) {
+        if (secondsAgo == 0) {
+            Observation memory last = pool.observations[index];
+            if (last.blockTimestamp != time) last = transform(last, time, tick, liquidity);
+            return (last.tickCumulative, last.secondsPerLiquidityCumulativeX128);
+        }
+
+        uint32 target = time - secondsAgo;
+
+        (Observation memory beforeOrAt, Observation memory atOrAfter) =
+            getSurroundingObservations(pool, time, target, tick, index, liquidity, cardinality);
+
+        if (target == beforeOrAt.blockTimestamp) {
+            // we're at the left boundary
+            return (beforeOrAt.tickCumulative, beforeOrAt.secondsPerLiquidityCumulativeX128);
+        } else if (target == atOrAfter.blockTimestamp) {
+            // we're at the right boundary
+            return (atOrAfter.tickCumulative, atOrAfter.secondsPerLiquidityCumulativeX128);
+        } else {
+            // we're in the middle
+            uint32 observationTimeDelta = atOrAfter.blockTimestamp - beforeOrAt.blockTimestamp;
+            uint32 targetDelta = target - beforeOrAt.blockTimestamp;
+            return (
+                beforeOrAt.tickCumulative +
+                    ((atOrAfter.tickCumulative - beforeOrAt.tickCumulative) / observationTimeDelta) *
+                    targetDelta,
+                beforeOrAt.secondsPerLiquidityCumulativeX128 +
+                    uint160(
+                        (uint256(
+                            atOrAfter.secondsPerLiquidityCumulativeX128 - beforeOrAt.secondsPerLiquidityCumulativeX128
+                        ) * targetDelta) / observationTimeDelta
+                    )
+            );
+        }
     }
 
     /// @notice Returns the next initialized tick contained in the same word (or adjacent word) as the tick that is either
@@ -183,7 +281,7 @@ library LibUniswapV3 {
             step.sqrtPriceStartX96 = state.sqrtPriceX96;
 
             (step.tickNext, step.initialized) =
-                pool.nextInitializedTickWithinOneWord(state.tick, pool.tickSpacing(), zeroForOne);
+                nextInitializedTickWithinOneWord(pool, state.tick, pool.tickSpacing(), zeroForOne);
 
             // ensure that we do not overshoot the min/max tick, as the tick bitmap is not aware of these bounds
             if (step.tickNext < TickMath8x.MIN_TICK) {
