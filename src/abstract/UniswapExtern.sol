@@ -38,6 +38,8 @@ abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3Exact
         iQuoter = IViewQuoterV3(config.quoter);
     }
 
+    /// @inheritdoc OpUniswapV3ExactOutput
+    //slither-disable-next-line dead-code
     function quoter() internal view override returns (IViewQuoterV3) {
         return iQuoter;
     }

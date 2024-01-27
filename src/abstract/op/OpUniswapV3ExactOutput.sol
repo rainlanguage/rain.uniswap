@@ -10,12 +10,14 @@ import {IViewQuoterV3} from "../../interface/IViewQuoterV3.sol";
 abstract contract OpUniswapV3ExactOutput {
     function quoter() internal view virtual returns (IViewQuoterV3);
 
+    //slither-disable-next-line dead-code
     function integrity(Operand, uint256, uint256) internal pure returns (uint256, uint256) {
         unchecked {
             return (4, 1);
         }
     }
 
+    //slither-disable-next-line dead-code
     function run(Operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenIn;
         uint256 tokenOut;

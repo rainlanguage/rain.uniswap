@@ -110,6 +110,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         return SUB_PARSER_PARSE_META;
     }
 
+    //slither-disable-next-line dead-code
     function parseUniswapV3Fee(uint256 value, uint256, uint256) internal pure returns (uint256) {
         return value;
     }
