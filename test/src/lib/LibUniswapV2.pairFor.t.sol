@@ -2,7 +2,7 @@
 pragma solidity =0.8.19;
 
 import {LibUniswapV2} from "src/lib/LibUniswapV2.sol";
-import {LibUniswapV2ReferenceTest} from "test/util/abstract/LibUniswapV2ReferenceTest.sol";
+import {LibUniswapV2ReferenceTest} from "test/abstract/LibUniswapV2ReferenceTest.sol";
 import {UniswapV2IdenticalAddresses, UniswapV2ZeroAddress} from "src/error/ErrUniswapV2.sol";
 
 contract LibUniswapV2PairForTest is LibUniswapV2ReferenceTest {

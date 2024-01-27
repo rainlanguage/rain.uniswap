@@ -21,7 +21,10 @@ optimizer_runs = 1000000
 bytecode_hash = "none"
 cbor_metadata = false
 
-fs_permissions = [{ access = "read", path = "out/reference/UniswapV2LibraryConcrete.sol/UniswapV2LibraryConcrete.json"}]
+fs_permissions = [
+    { access = "read", path = "out/reference/UniswapV2LibraryConcrete.sol/UniswapV2LibraryConcrete.json" },
+    { access = "read", path = "lib/rain.interpreter/meta/RainterpreterExpressionDeployerNPE2.rain.meta" }
+]
 
 remappings = [
     "rain.interpreter/=lib/rain.interpreter/src/",
