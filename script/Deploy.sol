@@ -8,7 +8,7 @@ contract Deploy is Script {
     function newQuoter() internal returns (address) {
         // https://book.getfoundry.sh/cheatcodes/get-code#examples
         bytes memory code = abi.encodePacked(
-            vm.getCode("lib/view-quoter-v3/Quoter.sol:Quoter"), abi.encode(vm.envAddress("UNI_V3_FACTORY"))
+            vm.getCode("quoter/Quoter.sol:Quoter"), abi.encode(vm.envAddress("UNI_V3_FACTORY"))
         );
         address quoter;
         assembly ("memory-safe") {
