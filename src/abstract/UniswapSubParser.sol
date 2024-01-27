@@ -6,15 +6,12 @@ import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibS
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
 import {AuthoringMetaV2} from "rain.interpreter/interface/IParserV1.sol";
-import {
-    OPCODE_UNISWAP_V2_AMOUNT_IN,
-    OPCODE_UNISWAP_V2_AMOUNT_OUT,
-    OPCODE_UNISWAP_V2_QUOTE
-} from "./UniswapExtern.sol";
+import {OPCODE_UNISWAP_V2_AMOUNT_IN, OPCODE_UNISWAP_V2_AMOUNT_OUT, OPCODE_UNISWAP_V2_QUOTE} from "./UniswapExtern.sol";
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
-bytes constant SUB_PARSER_PARSE_META = hex"01000000000000000000400002000000000000000000000008000000000000000000013cf36e00faeccc026bddff";
+bytes constant SUB_PARSER_PARSE_META =
+    hex"01000000000000000000400002000000000000000000000008000000000000000000013cf36e00faeccc026bddff";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
 bytes constant SUB_PARSER_WORD_PARSERS = hex"084f088908b4";
