@@ -6,18 +6,26 @@ import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibS
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
 import {AuthoringMetaV2} from "rain.interpreter/interface/IParserV1.sol";
-import {OPCODE_UNISWAP_V2_AMOUNT_IN, OPCODE_UNISWAP_V2_AMOUNT_OUT, OPCODE_UNISWAP_V2_QUOTE} from "./UniswapExtern.sol";
+import {
+    OPCODE_UNISWAP_V2_AMOUNT_IN,
+    OPCODE_UNISWAP_V2_AMOUNT_OUT,
+    OPCODE_UNISWAP_V2_QUOTE,
+    OPCODE_UNISWAP_V3_EXACT_OUTPUT
+} from "./UniswapExtern.sol";
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
-    hex"01000000000000000000400002000000000000000000000008000000000000000000013cf36e00faeccc026bddff";
+    hex"01000000000000000000600002000000000000000000000008000000000000000000013cf36e00faeccc03c18c4e026bddff";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"088708c108ec";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0abb0af50b200b4b";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0a590a590a59";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0dea0dea0dea0e7f";
+
+/// @dev Runtime constant form of the pointers to the literal parsers.
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0de3";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -25,8 +33,10 @@ uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT = 1;
 /// @dev Index into the function pointers array for the V2 quote.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_QUOTE = 2;
+/// @dev Index into the function pointers array for the V3 exact output.
+uint256 constant SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT = 3;
 /// @dev The number of function pointers in the array.
-uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 3;
+uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 4;
 
 /// Builds the authoring meta for the sub parser. This is used both as data for
 /// tooling directly, and to build the runtime parse meta.
@@ -45,8 +55,46 @@ function authoringMetaV2() pure returns (bytes memory) {
         "uniswap-v2-quote",
         "Given an amount of token A, calculates the equivalent valued amount of token B. The first input is the factory address, the second is the amount of token A, the third is token A's address, and the fourth is token B's address. If the operand is 1 the last time the prices changed will be returned as well."
     );
+    meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
+        "uniswap-v3-exact-output",
+        "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
+    );
     return abi.encode(meta);
 }
+
+uint256 constant SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX = 0;
+
+/// @dev The literal string for the high fee UniswapV3 pool.
+bytes constant LITERAL_UNISWAP_V3_FEE_HIGH = "uniswap-v3-fee-high";
+uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH = 19;
+uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH) * 8)) - 1);
+/// @dev The value that is returned when the high fee UniswapV3 pool is used.
+/// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#high
+uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_VALUE = 10000;
+
+/// @dev The literal string for the medium fee UniswapV3 pool.
+bytes constant LITERAL_UNISWAP_V3_FEE_MEDIUM = "uniswap-v3-fee-medium";
+uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH = 21;
+uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH) * 8)) - 1);
+/// @dev The value that is returned when the medium fee UniswapV3 pool is used.
+/// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#medium
+uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE = 3000;
+
+/// @dev The literal string for the low fee UniswapV3 pool.
+bytes constant LITERAL_UNISWAP_V3_FEE_LOW = "uniswap-v3-fee-low";
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_LENGTH = 18;
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOW_LENGTH) * 8)) - 1);
+/// @dev The value that is returned when the low fee UniswapV3 pool is used.
+/// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#low
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_VALUE = 500;
+
+/// @dev The literal string for the lowest fee UniswapV3 pool.
+bytes constant LITERAL_UNISWAP_V3_FEE_LOWEST = "uniswap-v3-fee-lowest";
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH = 21;
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH) * 8)) - 1);
+/// @dev The value that is returned when the lowest fee UniswapV3 pool is used.
+/// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#lowest
+uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
 
 /// @title UniswapSubParser
 /// Implements the sub parser half of UniswapWords. Responsible for parsing
@@ -60,6 +108,68 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     /// @inheritdoc BaseRainterpreterSubParserNPE2
     function subParserParseMeta() internal pure override returns (bytes memory) {
         return SUB_PARSER_PARSE_META;
+    }
+
+    //slither-disable-next-line dead-code
+    function parseUniswapV3Fee(uint256 value, uint256, uint256) internal pure returns (uint256) {
+        return value;
+    }
+
+    /// Overrides the base literal parsers for sub parsing. Simply returns the
+    /// known constant value, which should allow the compiler to optimise the
+    /// entire function call away.
+    function subParserLiteralParsers() internal pure override returns (bytes memory) {
+        return SUB_PARSER_LITERAL_PARSERS;
+    }
+
+    function buildSubParserLiteralParsers() external pure returns (bytes memory) {
+        unchecked {
+            function (uint256, uint256, uint256) internal pure returns (uint256)[] memory fs =
+                new function (uint256, uint256, uint256) internal pure returns (uint256)[](1);
+            fs[SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX] = parseUniswapV3Fee;
+
+            uint256[] memory pointers;
+            assembly ("memory-safe") {
+                pointers := fs
+            }
+            return LibConvert.unsafeTo16BitBytes(pointers);
+        }
+    }
+
+    function matchSubParseLiteralDispatch(uint256 cursor, uint256 end)
+        internal
+        pure
+        virtual
+        override
+        returns (bool, uint256, uint256)
+    {
+        uint256 loaded;
+        assembly ("memory-safe") {
+            loaded := mload(cursor)
+        }
+        if (
+            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_HIGH).length
+                && loaded & LITERAL_UNISWAP_V3_FEE_HIGH_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_HIGH))
+        ) {
+            return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_HIGH_VALUE);
+        } else if (
+            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_MEDIUM).length
+                && loaded & LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_MEDIUM))
+        ) {
+            return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE);
+        } else if (
+            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOW).length
+                && loaded & LITERAL_UNISWAP_V3_FEE_LOW_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOW))
+        ) {
+            return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOW_VALUE);
+        } else if (
+            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOWEST).length
+                && loaded & LITERAL_UNISWAP_V3_FEE_LOWEST_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOWEST))
+        ) {
+            return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE);
+        } else {
+            return (false, 0, 0);
+        }
     }
 
     /// @inheritdoc BaseRainterpreterSubParserNPE2
@@ -81,6 +191,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = LibParseOperand.handleOperandSingleFull;
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = LibParseOperand.handleOperandSingleFull;
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = LibParseOperand.handleOperandSingleFull;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = LibParseOperand.handleOperandDisallowed;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -100,6 +211,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = uniswapV2AmountInSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = uniswapV2AmountOutSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = uniswapV2QuoteSubParser;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = uniswapV3ExactOutputSubParser;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -162,6 +274,20 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             Operand.unwrap(operand) & 1 > 0 ? 2 : 1,
             operand,
             OPCODE_UNISWAP_V2_QUOTE
+        );
+    }
+
+    /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
+    /// address and index of the exact output opcode index in the extern.
+    //slither-disable-next-line dead-code
+    function uniswapV3ExactOutputSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+        internal
+        view
+        returns (bool, bytes memory, uint256[] memory)
+    {
+        //slither-disable-next-line unused-return
+        return LibSubParse.subParserExtern(
+            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_OUTPUT
         );
     }
 }

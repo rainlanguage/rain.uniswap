@@ -23,6 +23,7 @@ cbor_metadata = false
 
 fs_permissions = [
     { access = "read", path = "out/reference/UniswapV2LibraryConcrete.sol/UniswapV2LibraryConcrete.json" },
+    { access = "read", path = "out/quoter/Quoter.sol/Quoter.json" },
     { access = "read", path = "lib/rain.interpreter/meta/RainterpreterExpressionDeployerNPE2.rain.meta" }
 ]
 
@@ -46,4 +47,16 @@ remappings = [
     "v2-periphery/=reference/lib/v2-periphery/",
     "@uniswap/v2-core/=reference/lib/v2-core/",
     "@uniswap/v2-periphery/=reference/lib/v2-periphery/"
+]
+
+[profile.quoter]
+
+solc = "0.7.6"
+src = "lib/view-quoter-v3/contracts"
+test = "lib/view-quoter-v3/test"
+script = "lib/view-quoter-v3/script"
+out = "out/quoter/"
+libs = ["lib/view-quoter-v3/lib"]
+remappings = [
+    "v3-periphery/=lib/view-quoter-v3/lib/v3-periphery/",
 ]

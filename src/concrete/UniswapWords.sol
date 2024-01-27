@@ -5,13 +5,15 @@ import {
     UniswapExtern,
     OPCODE_FUNCTION_POINTERS,
     INTEGRITY_FUNCTION_POINTERS,
-    BaseRainterpreterExternNPE2
+    BaseRainterpreterExternNPE2,
+    UniswapExternConfig
 } from "../abstract/UniswapExtern.sol";
 import {
     UniswapSubParser,
     SUB_PARSER_WORD_PARSERS,
     SUB_PARSER_OPERAND_HANDLERS,
     SUB_PARSER_PARSE_META,
+    SUB_PARSER_LITERAL_PARSERS,
     BaseRainterpreterSubParserNPE2,
     AuthoringMetaV2,
     authoringMetaV2
@@ -20,6 +22,8 @@ import {
 /// @title UniswapWords
 /// Simply merges the two abstract contracts into a single concrete contract.
 contract UniswapWords is UniswapExtern, UniswapSubParser {
+    constructor(UniswapExternConfig memory externConfig) UniswapExtern(externConfig) {}
+
     /// @inheritdoc UniswapSubParser
     //slither-disable-next-line dead-code
     function extern() internal view override returns (address) {

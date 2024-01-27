@@ -6,9 +6,9 @@ import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
-import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
+import {BLOCK_NUMBER, QUOTER, LibFork} from "../../lib/LibTestFork.sol";
 
-contract UniswapWordsUniswapV2QuoteTest is OpTest {
+contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
     using Strings for address;
 
     function beforeOpTestConstructor() internal override {
@@ -19,24 +19,19 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
     }
 
-    function testUniswapWordsUniswapV2QuoteHappyFork() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+    function testUniswapWordsUniswapV3ExactOutputHappyFork() external {
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(QUOTER));
 
-        uint256[] memory expectedStack = new uint256[](5);
-        // v2 factory
-        expectedStack[4] = uint256(uint160(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f));
+        uint256[] memory expectedStack = new uint256[](3);
         // input
         // wbtc
-        expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        expectedStack[2] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
         // output
         // weth
-        expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // weth equivalent to 1e18 wbtc without slippage etc.
-        // is 18 decimals for the 1e18 weth and an extra 10 for the difference
-        // between wbtc and weth (8 vs 10).
-        expectedStack[1] = 183791234527832571606867631534;
-        // timestamp
-        expectedStack[0] = 1706347127;
+        expectedStack[1] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        // amount out
+        // wbtc has 8 decimals and weth has 18 so the amount out looks very small.
+        expectedStack[0] = 5450206;
 
         checkHappy(
             bytes(
@@ -44,14 +39,13 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "v2-factory: 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "quote timestamp: uniswap-v2-quote<1>(v2-factory 1e18 wbtc weth);"
+                    "amount-in: uniswap-v3-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-quote wbtc weth"
+            "uniswap-v3-exact-output wbtc weth"
         );
     }
 }
