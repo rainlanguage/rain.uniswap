@@ -7,9 +7,8 @@ import {UniswapWords, UniswapExternConfig} from "../src/concrete/UniswapWords.so
 contract Deploy is Script {
     function newQuoter() internal returns (address) {
         // https://book.getfoundry.sh/cheatcodes/get-code#examples
-        bytes memory code = abi.encodePacked(
-            vm.getCode("quoter/Quoter.sol:Quoter"), abi.encode(vm.envAddress("UNI_V3_FACTORY"))
-        );
+        bytes memory code =
+            abi.encodePacked(vm.getCode("quoter/Quoter.sol:Quoter"), abi.encode(vm.envAddress("UNI_V3_FACTORY")));
         address quoter;
         assembly ("memory-safe") {
             quoter := create(0, add(code, 0x20), mload(code))
