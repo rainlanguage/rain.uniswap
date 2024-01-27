@@ -21,6 +21,15 @@
             '';
             additionalBuildInputs = rainix.sol-build-inputs.${system};
           };
+
+          rainix-sol-test-debug = mkTask {
+            name = "rainix-sol-test-debug";
+            body = ''
+              set -euxo pipefail
+              forge test -vvvvv
+            '';
+            additionalBuildInputs = sol-build-inputs;
+          };
         } // rainix.packages.${system};
 
         devShells = rainix.devShells.${system};
