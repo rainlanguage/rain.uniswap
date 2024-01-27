@@ -10,22 +10,23 @@ import {
     OPCODE_UNISWAP_V2_AMOUNT_IN,
     OPCODE_UNISWAP_V2_AMOUNT_OUT,
     OPCODE_UNISWAP_V2_QUOTE,
-    OPCODE_UNISWAP_V3_EXACT_OUTPUT
+    OPCODE_UNISWAP_V3_EXACT_OUTPUT,
+    OPCODE_UNISWAP_V3_EXACT_INPUT
 } from "./UniswapExtern.sol";
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
-    hex"01000000000000000000600002000000000000000000000008000000000000000000013cf36e00faeccc03c18c4e026bddff";
+    hex"01000000000000000000600002000000000001000000000008000000000000000000013cf36e047495c100faeccc03c18c4e026bddff";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0abb0af50b200b4b";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0b9b0bd50c000c2b0c40";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0dea0dea0dea0e7f";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0f780f780f78100d100d";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0de3";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0f71";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -35,8 +36,10 @@ uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT = 1;
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_QUOTE = 2;
 /// @dev Index into the function pointers array for the V3 exact output.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT = 3;
+/// @dev Index into the function pointers array for the V3 exact input.
+uint256 constant SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT = 4;
 /// @dev The number of function pointers in the array.
-uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 4;
+uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 5;
 
 /// Builds the authoring meta for the sub parser. This is used both as data for
 /// tooling directly, and to build the runtime parse meta.
@@ -58,6 +61,10 @@ function authoringMetaV2() pure returns (bytes memory) {
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
         "uniswap-v3-exact-output",
         "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
+    );
+    meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
+        "uniswap-v3-exact-input",
+        "Computes the maximum amount of output tokens received from a given amount of input tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
     );
     return abi.encode(meta);
 }
@@ -192,6 +199,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = LibParseOperand.handleOperandSingleFull;
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = LibParseOperand.handleOperandSingleFull;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = LibParseOperand.handleOperandDisallowed;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = LibParseOperand.handleOperandDisallowed;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -212,6 +220,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = uniswapV2AmountOutSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = uniswapV2QuoteSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = uniswapV3ExactOutputSubParser;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = uniswapV3ExactInputSubParser;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -288,6 +297,20 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
             IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_OUTPUT
+        );
+    }
+
+    /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
+    /// address and index of the exact input opcode index in the extern.
+    //slither-disable-next-line dead-code
+    function uniswapV3ExactInputSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+        internal
+        view
+        returns (bool, bytes memory, uint256[] memory)
+    {
+        //slither-disable-next-line unused-return
+        return LibSubParse.subParserExtern(
+            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_INPUT
         );
     }
 }
