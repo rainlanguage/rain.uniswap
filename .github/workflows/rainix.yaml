@@ -32,4 +32,5 @@ jobs:
           ETH_RPC_URL: ${{ secrets.CI_DEPLOY_RPC_URL }}
           ETHERSCAN_API_KEY: ${{ secrets.EXPLORER_VERIFICATION_KEY }}
           RPC_URL_ETHEREUM_FORK: ${{ secrets.RPC_URL_ETHEREUM_FORK }}
+          UNI_V3_FACTORY: '0x1F98431c8aD98523631AE4a59f267346ea31F984'
         run: nix run .#${{ matrix.task }}

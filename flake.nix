@@ -18,6 +18,7 @@
               set -euxo pipefail
 
               FOUNDRY_PROFILE=reference forge build --force
+              FOUNDRY_PROFILE=quoter forge build --force
             '';
             additionalBuildInputs = rainix.sol-build-inputs.${system};
           };
