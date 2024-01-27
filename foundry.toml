@@ -23,6 +23,7 @@ cbor_metadata = false
 
 fs_permissions = [
     { access = "read", path = "out/reference/UniswapV2LibraryConcrete.sol/UniswapV2LibraryConcrete.json" },
+    { access = "read", path = "out/lib/view-quoter-v3/Quoter.sol/Quoter.json" },
     { access = "read", path = "lib/rain.interpreter/meta/RainterpreterExpressionDeployerNPE2.rain.meta" }
 ]
 
