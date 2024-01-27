@@ -8,7 +8,7 @@ import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 
-contract UniswapWordsUniswapV2AmountInTest is OpTest {
+contract UniswapWordsUniswapV2AmountOutTest is OpTest {
     using Strings for address;
 
     function beforeOpTestConstructor() internal override {
@@ -19,7 +19,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
     }
 
-    function testUniswapWordsUniswapV2AmountInHappyFork() external {
+    function testUniswapWordsUniswapV2AmountOutHappyFork() external {
         UniswapWords uniswapWords = new UniswapWords();
 
         uint256[] memory expectedStack = new uint256[](5);
@@ -32,8 +32,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // amount in
-        // wbtc has 8 decimals and weth has 18 so the amount in looks very small.
-        expectedStack[1] = 5460125;
+        expectedStack[1] = 18153612651961048307;
         // timestamp
         expectedStack[0] = 1706347127;
 
@@ -47,11 +46,12 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "v2-factory: 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "amount-in timestamp: uniswap-v2-amount-in<1>(v2-factory 1e18 wbtc weth);"
+                    // The amount is 1e8 to match the decimals of wbtc.
+                    "amount-out timestamp: uniswap-v2-amount-out<1>(v2-factory 1e8 wbtc weth);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-amount-in wbtc weth"
+            "uniswap-v2-amount-out wbtc weth"
         );
     }
 }
