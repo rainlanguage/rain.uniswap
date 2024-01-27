@@ -10,9 +10,9 @@ import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0dd00dd00dd00de0";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0ec40ec40ec40ed4";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0b040b5d0b890bb5";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0bf10c4a0c760ca2";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -32,7 +32,6 @@ struct UniswapExternConfig {
 /// @title UniswapExtern
 /// Implements externs for Uniswap V2 and V3.
 abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3ExactOutput {
-
     IViewQuoterV3 public immutable iQuoter;
 
     constructor(UniswapExternConfig memory config) {

@@ -41,7 +41,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "amount-in: uniswap-v3-exact-output(wbtc weth 1e18 500);"
+                    "amount-in: uniswap-v3-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,

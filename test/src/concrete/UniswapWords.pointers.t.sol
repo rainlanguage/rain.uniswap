@@ -10,6 +10,7 @@ import {
     OPCODE_FUNCTION_POINTERS,
     SUB_PARSER_WORD_PARSERS,
     SUB_PARSER_PARSE_META,
+    SUB_PARSER_LITERAL_PARSERS,
     AuthoringMetaV2,
     authoringMetaV2
 } from "src/concrete/UniswapWords.sol";
@@ -34,6 +35,11 @@ contract UniswapWordsPointersTest is Test {
     function testSubParserOperandHandlers() external {
         UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
         assertEq(SUB_PARSER_OPERAND_HANDLERS, uniswapWords.buildSubParserOperandHandlers());
+    }
+
+    function testSubParserLiteralParsers() external {
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        assertEq(SUB_PARSER_LITERAL_PARSERS, uniswapWords.buildSubParserLiteralParsers());
     }
 
     function testSubParserParseMeta() external {

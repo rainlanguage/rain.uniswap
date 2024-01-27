@@ -13,6 +13,7 @@ import {
     SUB_PARSER_WORD_PARSERS,
     SUB_PARSER_OPERAND_HANDLERS,
     SUB_PARSER_PARSE_META,
+    SUB_PARSER_LITERAL_PARSERS,
     BaseRainterpreterSubParserNPE2,
     AuthoringMetaV2,
     authoringMetaV2
@@ -21,7 +22,6 @@ import {
 /// @title UniswapWords
 /// Simply merges the two abstract contracts into a single concrete contract.
 contract UniswapWords is UniswapExtern, UniswapSubParser {
-
     constructor(UniswapExternConfig memory externConfig) UniswapExtern(externConfig) {}
 
     /// @inheritdoc UniswapSubParser
