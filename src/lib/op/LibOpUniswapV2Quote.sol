@@ -2,7 +2,7 @@
 pragma solidity ^0.8.18;
 
 import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
-import {LibUniswapV2} from "rain.uniswapv2/src/lib/LibUniswapV2.sol";
+import {LibUniswapV2} from "../LibUniswapV2.sol";
 
 /// @title LibOpUniswapV2Quote
 /// @notice Opcode to calculate the quote for a Uniswap V2 pair.

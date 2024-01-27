@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import {LibUniswapV2} from "rain.uniswapv2/src/lib/LibUniswapV2.sol";
+import {LibUniswapV2} from "../LibUniswapV2.sol";
 import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
 
 /// @title LibOpUniswapV2AmountOut
