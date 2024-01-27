@@ -7,12 +7,13 @@ import {LibOpUniswapV2AmountIn} from "../lib/op/LibOpUniswapV2AmountIn.sol";
 import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
 import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
+import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0ec40ec40ec40ed4";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10521052105210621062";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0bf10c4a0c760ca2";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0ce60d3f0d6b0d970eb2";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -22,8 +23,10 @@ uint256 constant OPCODE_UNISWAP_V2_AMOUNT_OUT = 1;
 uint256 constant OPCODE_UNISWAP_V2_QUOTE = 2;
 /// @dev Index into the function pointers array for the V3 exact output.
 uint256 constant OPCODE_UNISWAP_V3_EXACT_OUTPUT = 3;
+/// @dev Index into the function pointers array for the V3 exact input.
+uint256 constant OPCODE_UNISWAP_V3_EXACT_INPUT = 4;
 /// @dev The number of function pointers in the array.
-uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 4;
+uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 5;
 
 struct UniswapExternConfig {
     address quoter;
@@ -31,7 +34,7 @@ struct UniswapExternConfig {
 
 /// @title UniswapExtern
 /// Implements externs for Uniswap V2 and V3.
-abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3ExactOutput {
+abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3ExactOutput, OpUniswapV3ExactInput {
     IViewQuoterV3 public immutable iQuoter;
 
     constructor(UniswapExternConfig memory config) {
@@ -40,7 +43,7 @@ abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3Exact
 
     /// @inheritdoc OpUniswapV3ExactOutput
     //slither-disable-next-line dead-code
-    function quoter() internal view override returns (IViewQuoterV3) {
+    function quoter() internal view override(OpUniswapV3ExactOutput, OpUniswapV3ExactInput) returns (IViewQuoterV3) {
         return iQuoter;
     }
 
@@ -64,7 +67,8 @@ abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3Exact
         fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = LibOpUniswapV2AmountIn.run;
         fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = LibOpUniswapV2AmountOut.run;
         fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.run;
-        fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.run;
+        fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.runUniswapV3ExactOutput;
+        fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.runUniswapV3ExactInput;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -83,7 +87,8 @@ abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3Exact
         fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = LibOpUniswapV2AmountIn.integrity;
         fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = LibOpUniswapV2AmountOut.integrity;
         fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.integrity;
-        fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrity;
+        fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrityUniswapV3ExactOutput;
+        fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.integrityUniswapV3ExactInput;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
