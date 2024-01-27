@@ -12,7 +12,10 @@ jobs:
     env:
       DEPLOYMENT_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRIVATE_KEY || secrets.PRIVATE_KEY_DEV }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
 
       - uses: DeterminateSystems/nix-installer-action@v4
       - uses: DeterminateSystems/magic-nix-cache-action@v2
@@ -22,8 +25,8 @@ jobs:
       - run: nix run .#i9r-prelude
         working-directory: lib/rain.interpreter
 
-      - run: nix run .#rainix-sol-prelude
       - run: nix run .#uniswap-prelude
+      - run: nix run .#rainix-sol-prelude
       - name: Run ${{ matrix.task }}
         env:
           ETH_RPC_URL: ${{ secrets.CI_DEPLOY_RPC_URL }}
