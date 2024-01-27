@@ -8,9 +8,9 @@ import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
 import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0ab60ab61763";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"097009c909f5";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
