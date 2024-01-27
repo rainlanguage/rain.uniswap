@@ -1,0 +1,35 @@
+name: Rainix CI
+on: [push]
+
+jobs:
+  rainix:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        task: [rainix-sol-test, rainix-sol-static, rainix-sol-artifacts]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+    env:
+      DEPLOYMENT_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRIVATE_KEY || secrets.PRIVATE_KEY_DEV }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - uses: DeterminateSystems/nix-installer-action@v4
+      - uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - run: nix run .#rainix-sol-prelude
+        working-directory: lib/rain.interpreter
+      - run: nix run .#i9r-prelude
+        working-directory: lib/rain.interpreter
+
+      - run: nix run .#uniswap-prelude
+      - run: nix run .#rainix-sol-prelude
+      - name: Run ${{ matrix.task }}
+        env:
+          ETH_RPC_URL: ${{ secrets.CI_DEPLOY_RPC_URL }}
+          ETHERSCAN_API_KEY: ${{ secrets.EXPLORER_VERIFICATION_KEY }}
+          RPC_URL_ETHEREUM_FORK: ${{ secrets.RPC_URL_ETHEREUM_FORK }}
+        run: nix run .#${{ matrix.task }}
