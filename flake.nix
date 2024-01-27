@@ -22,13 +22,13 @@
             additionalBuildInputs = rainix.sol-build-inputs.${system};
           };
 
-          rainix-sol-test-debug = mkTask {
+          rainix-sol-test-debug = rainix.mkTask.${system} {
             name = "rainix-sol-test-debug";
             body = ''
               set -euxo pipefail
               forge test -vvvvv
             '';
-            additionalBuildInputs = sol-build-inputs;
+            additionalBuildInputs = rainix.sol-build-inputs.${system};
           };
         } // rainix.packages.${system};
 
