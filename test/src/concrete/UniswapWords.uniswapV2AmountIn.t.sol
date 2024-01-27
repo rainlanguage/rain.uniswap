@@ -2,7 +2,7 @@
 pragma solidity =0.8.19;
 
 import {OpTest} from "rain.interpreter/../test/util/abstract/OpTest.sol";
-import {UniswapWords} from "src/concrete/UniswapWords.sol";
+import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
@@ -20,7 +20,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
     }
 
     function testUniswapWordsUniswapV2AmountInHappyFork() external {
-        UniswapWords uniswapWords = new UniswapWords();
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
 
         uint256[] memory expectedStack = new uint256[](5);
         // v2 factory

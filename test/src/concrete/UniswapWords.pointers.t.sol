@@ -3,6 +3,7 @@ pragma solidity =0.8.19;
 
 import {Test} from "forge-std/Test.sol";
 import {
+    UniswapExternConfig,
     UniswapWords,
     INTEGRITY_FUNCTION_POINTERS,
     SUB_PARSER_OPERAND_HANDLERS,
@@ -16,22 +17,22 @@ import {LibParseMeta} from "rain.interpreter/lib/parse/LibParseMeta.sol";
 
 contract UniswapWordsPointersTest is Test {
     function testIntegrityPointers() external {
-        UniswapWords uniswapWords = new UniswapWords();
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
         assertEq(INTEGRITY_FUNCTION_POINTERS, uniswapWords.buildIntegrityFunctionPointers());
     }
 
     function testOpcodePointers() external {
-        UniswapWords uniswapWords = new UniswapWords();
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
         assertEq(OPCODE_FUNCTION_POINTERS, uniswapWords.buildOpcodeFunctionPointers());
     }
 
     function testSubParserWordParsers() external {
-        UniswapWords uniswapWords = new UniswapWords();
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
         assertEq(SUB_PARSER_WORD_PARSERS, uniswapWords.buildSubParserWordParsers());
     }
 
     function testSubParserOperandHandlers() external {
-        UniswapWords uniswapWords = new UniswapWords();
+        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
         assertEq(SUB_PARSER_OPERAND_HANDLERS, uniswapWords.buildSubParserOperandHandlers());
     }
 
