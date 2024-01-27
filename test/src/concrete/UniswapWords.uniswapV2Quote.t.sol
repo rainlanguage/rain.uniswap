@@ -8,7 +8,7 @@ import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 
-contract UniswapWordsUniswapV2AmountOutTest is OpTest {
+contract UniswapWordsUniswapV2QuoteTest is OpTest {
     using Strings for address;
 
     function beforeOpTestConstructor() internal override {
@@ -19,7 +19,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
         return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
     }
 
-    function testUniswapWordsUniswapV2AmountOutHappyFork() external {
+    function testUniswapWordsUniswapV2QuoteHappyFork() external {
         UniswapWords uniswapWords = new UniswapWords();
 
         uint256[] memory expectedStack = new uint256[](5);
@@ -31,8 +31,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
         // output
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount in
-        expectedStack[1] = 18153612651961048307;
+        // weth equivalent to 1e18 wbtc without slippage etc.
+        // is 18 decimals for the 1e18 weth and an extra 10 for the difference
+        // between wbtc and weth (8 vs 10).
+        expectedStack[1] = 183791234527832571606867631534;
         // timestamp
         expectedStack[0] = 1706347127;
 
@@ -45,12 +47,11 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     "v2-factory: 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    // The amount is 1e8 to match the decimals of wbtc.
-                    "amount-out timestamp: uniswap-v2-amount-out<1>(v2-factory 1e8 wbtc weth);"
+                    "quote timestamp: uniswap-v2-quote<1>(v2-factory 1e18 wbtc weth);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-amount-out wbtc weth"
+            "uniswap-v2-quote wbtc weth"
         );
     }
 }

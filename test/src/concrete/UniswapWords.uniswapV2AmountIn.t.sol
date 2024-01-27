@@ -37,7 +37,6 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         // timestamp
         expectedStack[0] = 1706347127;
 
-
         checkHappy(
             bytes(
                 string.concat(

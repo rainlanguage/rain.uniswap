@@ -8,9 +8,9 @@ import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
 import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0ab60ab61763";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"0aee0aee0aee";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"097009c909f5";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"09a80a010a2d";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -61,6 +61,7 @@ abstract contract UniswapExtern is BaseRainterpreterExternNPE2 {
         );
         fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = LibOpUniswapV2AmountIn.integrity;
         fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = LibOpUniswapV2AmountOut.integrity;
+        fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.integrity;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
