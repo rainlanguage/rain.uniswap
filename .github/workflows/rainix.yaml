@@ -18,6 +18,11 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@v2
 
       - run: nix run .#rainix-sol-prelude
+        working-directory: lib/rain.interpreter
+      - run: nix run .#i9r-prelude
+        working-directory: lib/rain.interpreter
+
+      - run: nix run .#rainix-sol-prelude
       - run: nix run .#uniswap-prelude
       - name: Run ${{ matrix.task }}
         env:
