@@ -15,30 +15,31 @@ import {
     authoringMetaV2
 } from "src/concrete/UniswapWords.sol";
 import {LibParseMeta} from "rain.interpreter/lib/parse/LibParseMeta.sol";
+import {LibFork} from "../../lib/LibTestFork.sol";
 
 contract UniswapWordsPointersTest is Test {
     function testIntegrityPointers() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
         assertEq(INTEGRITY_FUNCTION_POINTERS, uniswapWords.buildIntegrityFunctionPointers());
     }
 
     function testOpcodePointers() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
         assertEq(OPCODE_FUNCTION_POINTERS, uniswapWords.buildOpcodeFunctionPointers());
     }
 
     function testSubParserWordParsers() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
         assertEq(SUB_PARSER_WORD_PARSERS, uniswapWords.buildSubParserWordParsers());
     }
 
     function testSubParserOperandHandlers() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
         assertEq(SUB_PARSER_OPERAND_HANDLERS, uniswapWords.buildSubParserOperandHandlers());
     }
 
     function testSubParserLiteralParsers() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
         assertEq(SUB_PARSER_LITERAL_PARSERS, uniswapWords.buildSubParserLiteralParsers());
     }
 

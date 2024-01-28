@@ -11,9 +11,9 @@ import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10521052105210621062";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10841084108410941094";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0ce60d3f0d6b0d970eb2";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0d180d710d9d0dc90ee4";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -29,22 +29,25 @@ uint256 constant OPCODE_UNISWAP_V3_EXACT_INPUT = 4;
 uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 5;
 
 struct UniswapExternConfig {
-    address quoter;
+    address v2Factory;
+    address v3Quoter;
 }
 
 /// @title UniswapExtern
 /// Implements externs for Uniswap V2 and V3.
 abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3ExactOutput, OpUniswapV3ExactInput {
-    IViewQuoterV3 public immutable iQuoter;
+    address public immutable iV2Factory;
+    IViewQuoterV3 public immutable iV3Quoter;
 
     constructor(UniswapExternConfig memory config) {
-        iQuoter = IViewQuoterV3(config.quoter);
+        iV2Factory = config.v2Factory;
+        iV3Quoter = IViewQuoterV3(config.v3Quoter);
     }
 
     /// @inheritdoc OpUniswapV3ExactOutput
     //slither-disable-next-line dead-code
-    function quoter() internal view override(OpUniswapV3ExactOutput, OpUniswapV3ExactInput) returns (IViewQuoterV3) {
-        return iQuoter;
+    function v3Quoter() internal view override(OpUniswapV3ExactOutput, OpUniswapV3ExactInput) returns (IViewQuoterV3) {
+        return iV3Quoter;
     }
 
     /// @inheritdoc BaseRainterpreterExternNPE2

@@ -20,7 +20,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
     }
 
     function testUniswapWordsUniswapV2QuoteHappyFork() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
 
         uint256[] memory expectedStack = new uint256[](5);
         // v2 factory

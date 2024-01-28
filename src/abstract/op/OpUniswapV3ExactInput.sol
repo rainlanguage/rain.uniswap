@@ -8,7 +8,7 @@ import {IViewQuoterV3} from "../../interface/IViewQuoterV3.sol";
 /// @notice Opcode to calculate the amount in for an exact input from a Uniswap
 /// V3 pair.
 abstract contract OpUniswapV3ExactInput {
-    function quoter() internal view virtual returns (IViewQuoterV3);
+    function v3Quoter() internal view virtual returns (IViewQuoterV3);
 
     //slither-disable-next-line dead-code
     function integrityUniswapV3ExactInput(Operand, uint256, uint256) internal pure returns (uint256, uint256) {
@@ -29,7 +29,7 @@ abstract contract OpUniswapV3ExactInput {
             amountIn := mload(add(inputs, 0x60))
             fee := mload(add(inputs, 0x80))
         }
-        (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate) = quoter()
+        (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate) = v3Quoter()
             .quoteExactInputSingle(
             IViewQuoterV3.QuoteExactInputSingleParams(
                 address(uint160(tokenIn)),
