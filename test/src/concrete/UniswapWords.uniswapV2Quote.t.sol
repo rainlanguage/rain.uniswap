@@ -20,11 +20,9 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
     }
 
     function testUniswapWordsUniswapV2QuoteHappyFork() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(address(0)));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
 
-        uint256[] memory expectedStack = new uint256[](5);
-        // v2 factory
-        expectedStack[4] = uint256(uint160(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f));
+        uint256[] memory expectedStack = new uint256[](4);
         // input
         // wbtc
         expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
@@ -44,10 +42,9 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "v2-factory: 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "quote timestamp: uniswap-v2-quote<1>(v2-factory 1e18 wbtc weth);"
+                    "quote timestamp: uniswap-v2-quote<1>(wbtc weth 1e18);"
                 )
             ),
             expectedStack,

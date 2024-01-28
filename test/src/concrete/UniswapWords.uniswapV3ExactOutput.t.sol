@@ -20,7 +20,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
     }
 
     function testUniswapWordsUniswapV3ExactOutputHappyFork() external {
-        UniswapWords uniswapWords = new UniswapWords(UniswapExternConfig(QUOTER));
+        UniswapWords uniswapWords = LibFork.newUniswapWords();
 
         uint256[] memory expectedStack = new uint256[](3);
         // input
