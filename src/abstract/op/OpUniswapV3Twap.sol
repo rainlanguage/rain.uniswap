@@ -68,7 +68,10 @@ abstract contract OpUniswapV3Twap {
             );
         }
 
-        uint256 twap = Math.mulDiv(sqrtPriceX96, sqrtPriceX96, 2 ** 192);
+        // `uint256(type(uint160).max) * 1e18` doesn't overflow, so this can't
+        // either.
+        // We rely on the compiler to optimise the 2 ** 192 out.
+        uint256 twap = Math.mulDiv(sqrtPriceX96, uint256(sqrtPriceX96) * 1e18, 2 ** 192);
 
         assembly ("memory-safe") {
             mstore(inputs, 1)
