@@ -22,9 +22,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
     function testUniswapWordsUniswapV2AmountOutHappyFork() external {
         UniswapWords uniswapWords = LibFork.newUniswapWords();
 
-        uint256[] memory expectedStack = new uint256[](5);
-        // v2 factory
-        expectedStack[4] = uint256(uint160(0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f));
+        uint256[] memory expectedStack = new uint256[](4);
         // input
         // wbtc
         expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
@@ -42,11 +40,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "v2-factory: 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     // The amount is 1e8 to match the decimals of wbtc.
-                    "amount-out timestamp: uniswap-v2-amount-out<1>(v2-factory 1e8 wbtc weth);"
+                    "amount-out timestamp: uniswap-v2-amount-out<1>(wbtc weth 1e8);"
                 )
             ),
             expectedStack,
