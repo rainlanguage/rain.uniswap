@@ -23,10 +23,10 @@ bytes constant SUB_PARSER_PARSE_META =
 bytes constant SUB_PARSER_WORD_PARSERS = hex"0bcd0c070c320c5d0c72";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0faa0faa0faa103f103f";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0ff10ff10ff110861086";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0fa3";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0fea";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -48,7 +48,7 @@ function authoringMetaV2() pure returns (bytes memory) {
     AuthoringMetaV2[] memory meta = new AuthoringMetaV2[](SUB_PARSER_WORD_PARSERS_LENGTH);
     meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = AuthoringMetaV2(
         "uniswap-v2-amount-in",
-        "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV2 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the factory address, the second is the amount of output tokens, the third is the input token address, and the fourth is the output token address. If the operand is 1 the last time the prices changed will be returned as well."
+        "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV2 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = AuthoringMetaV2(
         "uniswap-v2-amount-out",
