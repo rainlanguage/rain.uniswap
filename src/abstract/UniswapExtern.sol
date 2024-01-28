@@ -8,12 +8,13 @@ import {OpUniswapV2AmountOut} from "./op/OpUniswapV2AmountOut.sol";
 import {OpUniswapV2Quote} from "./op/OpUniswapV2Quote.sol";
 import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
 import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
+import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10d410d410d410e410e4";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"15001500150015101510151c";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0d180d8b0dd20e190f34";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0e3f0eb20ef90f40105b111a";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -25,11 +26,14 @@ uint256 constant OPCODE_UNISWAP_V2_QUOTE = 2;
 uint256 constant OPCODE_UNISWAP_V3_EXACT_OUTPUT = 3;
 /// @dev Index into the function pointers array for the V3 exact input.
 uint256 constant OPCODE_UNISWAP_V3_EXACT_INPUT = 4;
+/// @dev Index into the function pointers array for the V3 twap.
+uint256 constant OPCODE_UNISWAP_V3_TWAP = 5;
 /// @dev The number of function pointers in the array.
-uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 5;
+uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 6;
 
 struct UniswapExternConfig {
     address v2Factory;
+    address v3Factory;
     address v3Quoter;
 }
 
@@ -41,13 +45,16 @@ abstract contract UniswapExtern is
     OpUniswapV2AmountOut,
     OpUniswapV2Quote,
     OpUniswapV3ExactOutput,
-    OpUniswapV3ExactInput
+    OpUniswapV3ExactInput,
+    OpUniswapV3Twap
 {
     address public immutable iV2Factory;
+    address public immutable iV3Factory;
     IViewQuoterV3 public immutable iV3Quoter;
 
     constructor(UniswapExternConfig memory config) {
         iV2Factory = config.v2Factory;
+        iV3Factory = config.v3Factory;
         iV3Quoter = IViewQuoterV3(config.v3Quoter);
     }
 
@@ -60,6 +67,17 @@ abstract contract UniswapExtern is
         returns (address)
     {
         return iV2Factory;
+    }
+
+    /// @inheritdoc OpUniswapV3Twap
+    //slither-disable-next-line dead-code
+    function v3Factory()
+        internal
+        view
+        override
+        returns (address)
+    {
+        return iV3Factory;
     }
 
     /// @inheritdoc OpUniswapV3ExactOutput
@@ -90,6 +108,7 @@ abstract contract UniswapExtern is
         fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.runUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.runUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.runUniswapV3ExactInput;
+        fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.runUniswapV3Twap;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -110,6 +129,7 @@ abstract contract UniswapExtern is
         fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.integrityUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrityUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.integrityUniswapV3ExactInput;
+        fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.integrityUniswapV3Twap;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {

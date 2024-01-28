@@ -6,7 +6,7 @@ import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
-import {BLOCK_NUMBER, QUOTER, LibFork} from "../../lib/LibTestFork.sol";
+import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 
 contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
     using Strings for address;

@@ -4,9 +4,11 @@ pragma solidity ^0.8.18;
 import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
 import {LibUniswapV3PoolAddress} from "../../lib/v3/LibUniswapV3PoolAddress.sol";
 import {IUniswapV3Pool} from "v3-core/contracts/interfaces/IUniswapV3Pool.sol";
-import {TickMath} from "v3-core/contracts/libraries/TickMath.sol";
+import {LibUniswapV3TickMath} from "../../lib/v3/LibUniswapV3TickMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
-import {FullMath} from "v3-core/contracts/libraries/FullMath.sol";
+import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
+
+import {console2} from "forge-std/console2.sol";
 
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
 
@@ -52,20 +54,21 @@ abstract contract OpUniswapV3Twap {
 
         // Start 0 means current price.
         if (startSecondsAgo == 0) {
-            (sqrtPriceX96, , , , , , ) = pool.slot0();
-        }
-        else {
+            (sqrtPriceX96,,,,,,) = pool.slot0();
+        } else {
             uint32[] memory secondsAgos = new uint32[](2);
             secondsAgos[0] = uint32(startSecondsAgo);
             secondsAgos[1] = uint32(endSecondsAgo);
-            (int56[] memory tickCumulatives, ) = pool.observe(secondsAgos);
+            (int56[] memory tickCumulatives,) = pool.observe(secondsAgos);
 
-            sqrtPriceX96 = TickMath.getSqrtRatioAtTick(
+            sqrtPriceX96 = LibUniswapV3TickMath.getSqrtRatioAtTick(
                 int24((tickCumulatives[1] - tickCumulatives[0]) / int56(uint56(startSecondsAgo - endSecondsAgo)))
             );
         }
 
-        uint256 twap = FullMath.mulDiv(sqrtPriceX96, sqrtPriceX96, FixedPoint96.Q96);
+        // console2.log("sqrtPriceX96", sqrtPriceX96);
+
+        uint256 twap = Math.mulDiv(sqrtPriceX96, sqrtPriceX96, FixedPoint96.Q96);
 
         assembly ("memory-safe") {
             mstore(inputs, 1)

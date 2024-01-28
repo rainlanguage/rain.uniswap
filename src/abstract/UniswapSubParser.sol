@@ -11,22 +11,23 @@ import {
     OPCODE_UNISWAP_V2_AMOUNT_OUT,
     OPCODE_UNISWAP_V2_QUOTE,
     OPCODE_UNISWAP_V3_EXACT_OUTPUT,
-    OPCODE_UNISWAP_V3_EXACT_INPUT
+    OPCODE_UNISWAP_V3_EXACT_INPUT,
+    OPCODE_UNISWAP_V3_TWAP
 } from "./UniswapExtern.sol";
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
-    hex"01000000000000000000600002000000000001000000000008000000000000000000013cf36e047495c100faeccc03c18c4e026bddff";
+    hex"01000000000000000000600002000000000001000000000008000000000000000040055fc5ab013cf36e047495c100faeccc03c18c4e026bddff";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0bcd0c070c320c5d0c72";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d190d440d6f0d840d99";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"0ffa0ffa0ffa108f108f";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"14261426142614bb14bb14bb";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"0ff3";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"141d";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -38,8 +39,10 @@ uint256 constant SUB_PARSER_WORD_UNISWAP_V2_QUOTE = 2;
 uint256 constant SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT = 3;
 /// @dev Index into the function pointers array for the V3 exact input.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT = 4;
+/// @dev Index into the function pointers array for the V3 twap.
+uint256 constant SUB_PARSER_WORD_UNISWAP_V3_TWAP = 5;
 /// @dev The number of function pointers in the array.
-uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 5;
+uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 6;
 
 /// Builds the authoring meta for the sub parser. This is used both as data for
 /// tooling directly, and to build the runtime parse meta.
@@ -65,6 +68,10 @@ function authoringMetaV2() pure returns (bytes memory) {
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
         "uniswap-v3-exact-input",
         "Computes the maximum amount of output tokens received from a given amount of input tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
+    );
+    meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
+        "uniswap-v3-twap",
+        "Computes the time weighted average price of a given token pair over a given period of time. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the start time ago in seconds, the fourth is the end time ago in seconds, and the fifth is the pool fee. If the start and end times are both 0, returns the current price rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
     );
     return abi.encode(meta);
 }
@@ -200,6 +207,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = LibParseOperand.handleOperandSingleFull;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = LibParseOperand.handleOperandDisallowed;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = LibParseOperand.handleOperandDisallowed;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = LibParseOperand.handleOperandDisallowed;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -221,6 +229,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         fs[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = uniswapV2QuoteSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = uniswapV3ExactOutputSubParser;
         fs[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = uniswapV3ExactInputSubParser;
+        fs[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = uniswapV3TwapSubParser;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -311,6 +320,20 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
             IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_INPUT
+        );
+    }
+
+    /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
+    /// address and index of the TWAP opcode index in the extern.
+    //slither-disable-next-line dead-code
+    function uniswapV3TwapSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+        internal
+        view
+        returns (bool, bytes memory, uint256[] memory)
+    {
+        //slither-disable-next-line unused-return
+        return LibSubParse.subParserExtern(
+            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_TWAP
         );
     }
 }
