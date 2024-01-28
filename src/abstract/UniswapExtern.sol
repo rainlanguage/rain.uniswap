@@ -12,7 +12,7 @@ import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"15601560156015701570157c";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"153b153b153b154b154b1557";
 /// @dev Runtime constant form of the pointers to the opcode functions.
 bytes constant OPCODE_FUNCTION_POINTERS = hex"0e3f0eb20ef90f40105b111a";
 

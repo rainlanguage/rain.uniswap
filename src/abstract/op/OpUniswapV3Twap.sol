@@ -37,10 +37,6 @@ abstract contract OpUniswapV3Twap {
             fee := mload(add(inputs, 0xa0))
         }
 
-        if (token1 <= token0) {
-            revert UniswapV3TwapTokenOrder(token0, token1);
-        }
-
         if (startSecondsAgo < endSecondsAgo) {
             revert UniswapV3TwapStartAfterEnd(startSecondsAgo, endSecondsAgo);
         }
@@ -72,6 +68,10 @@ abstract contract OpUniswapV3Twap {
         // either.
         // We rely on the compiler to optimise the 2 ** 192 out.
         uint256 twap = Math.mulDiv(sqrtPriceX96, uint256(sqrtPriceX96) * 1e18, 2 ** 192);
+
+        if (token1 <= token0) {
+            twap = Math.mulDiv(1e18, 1e18, twap);
+        }
 
         assembly ("memory-safe") {
             mstore(inputs, 1)
