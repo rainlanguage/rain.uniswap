@@ -69,8 +69,9 @@ abstract contract OpUniswapV3Twap {
         // We rely on the compiler to optimise the 2 ** 192 out.
         uint256 twap = Math.mulDiv(sqrtPriceX96, uint256(sqrtPriceX96) * 1e18, 2 ** 192);
 
+        // inverse as 18 decimal math.
         if (token1 <= token0) {
-            twap = Math.mulDiv(1e18, 1e18, twap);
+            twap = 1e36 / twap;
         }
 
         assembly ("memory-safe") {
