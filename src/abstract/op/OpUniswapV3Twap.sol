@@ -8,9 +8,8 @@ import {LibUniswapV3TickMath} from "../../lib/v3/LibUniswapV3TickMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 
-import {console2} from "forge-std/console2.sol";
-
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
+error UniswapV3TwapTokenOrder(uint256 token0, uint256 token1);
 
 /// @title OpUniswapV3Twap
 /// @notice Opcode to calculate the average ratio of a token pair over a period
@@ -25,17 +24,21 @@ abstract contract OpUniswapV3Twap {
 
     //slither-disable-next-line dead-code
     function runUniswapV3Twap(Operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
-        uint256 tokenIn;
-        uint256 tokenOut;
+        uint256 token0;
+        uint256 token1;
         uint256 startSecondsAgo;
         uint256 endSecondsAgo;
         uint256 fee;
         assembly ("memory-safe") {
-            tokenIn := mload(add(inputs, 0x20))
-            tokenOut := mload(add(inputs, 0x40))
+            token0 := mload(add(inputs, 0x20))
+            token1 := mload(add(inputs, 0x40))
             startSecondsAgo := mload(add(inputs, 0x60))
             endSecondsAgo := mload(add(inputs, 0x80))
             fee := mload(add(inputs, 0xa0))
+        }
+
+        if (token1 <= token0) {
+            revert UniswapV3TwapTokenOrder(token0, token1);
         }
 
         if (startSecondsAgo < endSecondsAgo) {
@@ -45,7 +48,7 @@ abstract contract OpUniswapV3Twap {
         IUniswapV3Pool pool = IUniswapV3Pool(
             LibUniswapV3PoolAddress.computeAddress(
                 v3Factory(),
-                LibUniswapV3PoolAddress.getPoolKey(address(uint160(tokenIn)), address(uint160(tokenOut)), uint24(fee))
+                LibUniswapV3PoolAddress.getPoolKey(address(uint160(token0)), address(uint160(token1)), uint24(fee))
             )
         );
 
