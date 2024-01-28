@@ -11,6 +11,7 @@ abstract contract OpUniswapV2AmountIn {
 
     /// Extern integrity for the process of calculating the amount in for a
     /// Uniswap V2 pair. Always requires 3 inputs and produces 1 or 2 outputs.
+    //slither-disable-next-line dead-code
     function integrityUniswapV2AmountIn(Operand operand, uint256, uint256) internal pure returns (uint256, uint256) {
         unchecked {
             // Outputs is 1 if we don't want the timestamp (operand 0) or 2 if we
@@ -20,6 +21,7 @@ abstract contract OpUniswapV2AmountIn {
         }
     }
 
+    //slither-disable-next-line dead-code
     function runUniswapV2AmountIn(Operand operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenIn;
         uint256 tokenOut;

@@ -2,38 +2,39 @@
 pragma solidity ^0.8.18;
 
 import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
-import {LibUniswapV2} from "../LibUniswapV2.sol";
+import {LibUniswapV2} from "../../lib/LibUniswapV2.sol";
 
-/// @title LibOpUniswapV2Quote
+/// @title OpUniswapV2Quote
 /// @notice Opcode to calculate the quote for a Uniswap V2 pair.
-library LibOpUniswapV2Quote {
+abstract contract OpUniswapV2Quote {
+    function v2Factory() internal view virtual returns (address);
+
     /// Extern integrity for the process of calculating the quote for a Uniswap
-    /// V2 pair. Always requires 4 inputs and produces 1 or 2 outputs.
-    function integrity(Operand operand, uint256, uint256) internal pure returns (uint256, uint256) {
+    /// V2 pair. Always requires 3 inputs and produces 1 or 2 outputs.
+    //slither-disable-next-line dead-code
+    function integrityUniswapV2Quote(Operand operand, uint256, uint256) internal pure returns (uint256, uint256) {
         unchecked {
             // Outputs is 1 if we don't want the timestamp (operand 0) or 2 if we
             // do (operand 1).
             uint256 outputs = 1 + (Operand.unwrap(operand) & 1);
-            return (4, outputs);
+            return (3, outputs);
         }
     }
 
-    function run(Operand operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
-        uint256 factory;
-        uint256 amountA;
+    //slither-disable-next-line dead-code
+    function runUniswapV2Quote(Operand operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenA;
         uint256 tokenB;
+        uint256 amountA;
         uint256 withTime;
         assembly ("memory-safe") {
-            factory := mload(add(inputs, 0x20))
-            amountA := mload(add(inputs, 0x40))
-            tokenA := mload(add(inputs, 0x60))
-            tokenB := mload(add(inputs, 0x80))
+            tokenA := mload(add(inputs, 0x20))
+            tokenB := mload(add(inputs, 0x40))
+            amountA := mload(add(inputs, 0x60))
             withTime := and(operand, 1)
         }
-        (uint256 amountB, uint256 reserveTimestamp) = LibUniswapV2.getQuoteWithTime(
-            address(uint160(factory)), address(uint160(tokenA)), address(uint160(tokenB)), amountA
-        );
+        (uint256 amountB, uint256 reserveTimestamp) =
+            LibUniswapV2.getQuoteWithTime(v2Factory(), address(uint160(tokenA)), address(uint160(tokenB)), amountA);
 
         assembly ("memory-safe") {
             mstore(inputs, 1)

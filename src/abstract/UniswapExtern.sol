@@ -5,15 +5,15 @@ import {BaseRainterpreterExternNPE2, Operand} from "rain.interpreter/abstract/Ba
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
 import {OpUniswapV2AmountIn} from "./op/OpUniswapV2AmountIn.sol";
 import {OpUniswapV2AmountOut} from "./op/OpUniswapV2AmountOut.sol";
-import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
+import {OpUniswapV2Quote} from "./op/OpUniswapV2Quote.sol";
 import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
 import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10e610e610f611061106";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"10d410d410d410e410e4";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0d180d8b0dd20e2b0f46";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0d180d8b0dd20e190f34";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
@@ -39,6 +39,7 @@ abstract contract UniswapExtern is
     BaseRainterpreterExternNPE2,
     OpUniswapV2AmountIn,
     OpUniswapV2AmountOut,
+    OpUniswapV2Quote,
     OpUniswapV3ExactOutput,
     OpUniswapV3ExactInput
 {
@@ -52,7 +53,12 @@ abstract contract UniswapExtern is
 
     /// @inheritdoc OpUniswapV2AmountIn
     //slither-disable-next-line dead-code
-    function v2Factory() internal view override(OpUniswapV2AmountIn, OpUniswapV2AmountOut) returns (address) {
+    function v2Factory()
+        internal
+        view
+        override(OpUniswapV2AmountIn, OpUniswapV2AmountOut, OpUniswapV2Quote)
+        returns (address)
+    {
         return iV2Factory;
     }
 
@@ -81,7 +87,7 @@ abstract contract UniswapExtern is
         );
         fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = OpUniswapV2AmountIn.runUniswapV2AmountIn;
         fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = OpUniswapV2AmountOut.runUniswapV2AmountOut;
-        fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.run;
+        fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.runUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.runUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.runUniswapV3ExactInput;
 
@@ -101,7 +107,7 @@ abstract contract UniswapExtern is
         );
         fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = OpUniswapV2AmountIn.integrityUniswapV2AmountIn;
         fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = OpUniswapV2AmountOut.integrityUniswapV2AmountOut;
-        fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.integrity;
+        fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.integrityUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrityUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.integrityUniswapV3ExactInput;
 
