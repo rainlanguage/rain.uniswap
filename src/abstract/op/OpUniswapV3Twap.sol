@@ -23,7 +23,6 @@ abstract contract OpUniswapV3Twap {
         return (5, 1);
     }
 
-    /// https://tienshaoku.medium.com/a-guide-on-uniswap-v3-twap-oracle-2aa74a4a97c5
     //slither-disable-next-line dead-code
     function runUniswapV3Twap(Operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenIn;
@@ -66,9 +65,7 @@ abstract contract OpUniswapV3Twap {
             );
         }
 
-        // console2.log("sqrtPriceX96", sqrtPriceX96);
-
-        uint256 twap = Math.mulDiv(sqrtPriceX96, sqrtPriceX96, FixedPoint96.Q96);
+        uint256 twap = Math.mulDiv(sqrtPriceX96, sqrtPriceX96, 2 ** 192);
 
         assembly ("memory-safe") {
             mstore(inputs, 1)

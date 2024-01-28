@@ -12,7 +12,7 @@ import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"15001500150015101510151c";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"150c150c150c151c151c1528";
 /// @dev Runtime constant form of the pointers to the opcode functions.
 bytes constant OPCODE_FUNCTION_POINTERS = hex"0e3f0eb20ef90f40105b111a";
 
@@ -71,12 +71,7 @@ abstract contract UniswapExtern is
 
     /// @inheritdoc OpUniswapV3Twap
     //slither-disable-next-line dead-code
-    function v3Factory()
-        internal
-        view
-        override
-        returns (address)
-    {
+    function v3Factory() internal view override returns (address) {
         return iV3Factory;
     }
 

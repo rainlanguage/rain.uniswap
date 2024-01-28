@@ -30,18 +30,17 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
         // weth
         expectedStack[6] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // twap current-price btc eth
-        expectedStack[5] = 14544121711699540721594550475994659231050;
+        expectedStack[5] = 183572624306;
         // twap last-second btc eth
-        expectedStack[4] = 14543060502523966376210716559257963494216;
+        expectedStack[4] = 183559229963;
         // twap 30 mins btc eth
-        expectedStack[3] = 14538698456811430544247714486936225301531;
+        expectedStack[3] = 183504173206;
         // twap current-price eth btc
-        expectedStack[2] = 14544121711699540721594550475994659231050;
+        expectedStack[2] = 183572624306;
         // twap last-second eth btc
-        expectedStack[1] = 14543060502523966376210716559257963494216;
+        expectedStack[1] = 183559229963;
         // twap 30 mins eth btc
-        expectedStack[0] = 14538698456811430544247714486936225301531;
-
+        expectedStack[0] = 183504173206;
 
         checkHappy(
             bytes(

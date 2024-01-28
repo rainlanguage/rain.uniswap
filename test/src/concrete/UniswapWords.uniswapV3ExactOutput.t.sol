@@ -22,16 +22,17 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
     function testUniswapWordsUniswapV3ExactOutputHappyFork() external {
         UniswapWords uniswapWords = LibFork.newUniswapWords();
 
-        uint256[] memory expectedStack = new uint256[](3);
+        uint256[] memory expectedStack = new uint256[](4);
         // input
         // wbtc
-        expectedStack[2] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
         // output
         // weth
-        expectedStack[1] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount out
-        // wbtc has 8 decimals and weth has 18 so the amount out looks very small.
-        expectedStack[0] = 5450206;
+        expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        // amount out 1e18 wbtc weth ~0.054 btc as 8 decimals (btc)
+        expectedStack[1] = 5450206;
+        // amount out 1e8 weth wbtc ~18.3 as 18 decimals (eth)
+        expectedStack[0] = 18369201836320617322;
 
         checkHappy(
             bytes(
@@ -41,7 +42,8 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "amount-in: uniswap-v3-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                    "amount-in-wbtc-weth: uniswap-v3-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]),"
+                    "amount-in-weth-wbtc: uniswap-v3-exact-output(weth wbtc 1e8 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,

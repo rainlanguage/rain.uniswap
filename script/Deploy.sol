@@ -18,7 +18,11 @@ contract Deploy is Script {
 
     function run() public {
         vm.startBroadcast(vm.envUint("DEPLOYMENT_KEY"));
-        new UniswapWords(UniswapExternConfig(vm.envAddress("UNI_V2_FACTORY"), vm.envAddress("UNI_V3_FACTORY"), vm.envOr("UNI_V3_QUOTER", newQuoter())));
+        new UniswapWords(
+            UniswapExternConfig(
+                vm.envAddress("UNI_V2_FACTORY"), vm.envAddress("UNI_V3_FACTORY"), vm.envOr("UNI_V3_QUOTER", newQuoter())
+            )
+        );
         vm.stopBroadcast();
     }
 }
