@@ -29,6 +29,7 @@ abstract contract OpUniswapV3Twap {
         uint256 token0;
         uint256 token0Decimals;
         uint256 token1;
+        //slither-disable-next-line similar-names
         uint256 token1Decimals;
         uint256 startSecondsAgo;
         uint256 endSecondsAgo;
@@ -58,11 +59,13 @@ abstract contract OpUniswapV3Twap {
 
         // Start 0 means current price.
         if (startSecondsAgo == 0) {
+            //slither-disable-next-line unused-return
             (sqrtPriceX96,,,,,,) = pool.slot0();
         } else {
             uint32[] memory secondsAgos = new uint32[](2);
             secondsAgos[0] = uint32(startSecondsAgo);
             secondsAgos[1] = uint32(endSecondsAgo);
+            //slither-disable-next-line unused-return
             (int56[] memory tickCumulatives,) = pool.observe(secondsAgos);
 
             sqrtPriceX96 = LibUniswapV3TickMath.getSqrtRatioAtTick(
