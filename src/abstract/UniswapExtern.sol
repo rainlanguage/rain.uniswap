@@ -33,7 +33,6 @@ uint256 constant OPCODE_FUNCTION_POINTERS_LENGTH = 6;
 
 struct UniswapExternConfig {
     address v2Factory;
-    address v3Factory;
     address v3Quoter;
 }
 
@@ -54,8 +53,8 @@ abstract contract UniswapExtern is
 
     constructor(UniswapExternConfig memory config) {
         iV2Factory = config.v2Factory;
-        iV3Factory = config.v3Factory;
         iV3Quoter = IViewQuoterV3(config.v3Quoter);
+        iV3Factory = iV3Quoter.factory();
     }
 
     /// @inheritdoc OpUniswapV2AmountIn

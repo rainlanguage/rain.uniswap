@@ -7,6 +7,7 @@ import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
     "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
+import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
 
 contract UniswapWordsUniswapV3TwapTest is OpTest {
     using Strings for address;
@@ -20,7 +21,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
     }
 
     function testUniswapWordsUniswapV3TwapHappyFork() external {
-        UniswapWords uniswapWords = LibFork.newUniswapWords();
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
         uint256[] memory expectedStack = new uint256[](11);
         // dai
