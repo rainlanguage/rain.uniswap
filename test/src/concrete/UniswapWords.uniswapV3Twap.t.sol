@@ -22,19 +22,25 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
     function testUniswapWordsUniswapV3TwapHappyFork() external {
         UniswapWords uniswapWords = LibFork.newUniswapWords();
 
-        uint256[] memory expectedStack = new uint256[](8);
+        uint256[] memory expectedStack = new uint256[](11);
         // dai
-        expectedStack[7] = uint256(uint160(0x6B175474E89094C44Da98b954EedeAC495271d0F));
+        expectedStack[10] = uint256(uint160(0x6B175474E89094C44Da98b954EedeAC495271d0F));
         // wbtc
-        expectedStack[6] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        expectedStack[9] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
         // weth
-        expectedStack[5] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        expectedStack[8] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // twap current-price btc eth
-        expectedStack[4] = 183572624306173942069633049756;
+        expectedStack[7] = 18357262430617394206;
         // twap last-second btc eth
-        expectedStack[3] = 183559229963279983321631658171;
+        expectedStack[6] = 18355922996327998332;
         // twap 30 mins btc eth
-        expectedStack[2] = 183504173206009480124104013764;
+        expectedStack[5] = 18350417320600948012;
+        // twap current-price eth btc
+        expectedStack[4] = 54474350000000000;
+        // twap last-second eth btc
+        expectedStack[3] = 54478320000000000;
+        // twap 30 mins eth btc
+        expectedStack[2] = 54494670000000000;
         // twap dai weth
         expectedStack[1] = 441994201059850;
         // twap weth dai
@@ -49,11 +55,14 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "dai: 0x6B175474E89094C44Da98b954EedeAC495271d0F,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "current-price-btc-eth: uniswap-v3-twap(wbtc weth 0 0 [uniswap-v3-fee-low]),",
-                    "last-second-btc-eth: uniswap-v3-twap(wbtc weth 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-btc-eth: uniswap-v3-twap(wbtc weth int-mul(60 30) 0 [uniswap-v3-fee-low]),",
-                    "weth-dai: uniswap-v3-twap(dai weth 1000 0 [uniswap-v3-fee-low]),"
-                    "dai-weth: uniswap-v3-twap(weth dai 1000 0 [uniswap-v3-fee-low]);"
+                    "current-price-btc-eth: uniswap-v3-twap(wbtc 8 weth 18 0 0 [uniswap-v3-fee-low]),",
+                    "last-second-btc-eth: uniswap-v3-twap(wbtc 8 weth 18 2 1 [uniswap-v3-fee-low]),",
+                    "last-30-mins-btc-eth: uniswap-v3-twap(wbtc 8 weth 18 int-mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "current-price-eth-btc: uniswap-v3-twap(weth 18 wbtc 8 0 0 [uniswap-v3-fee-low]),",
+                    "last-second-eth-btc: uniswap-v3-twap(weth 18 wbtc 8 2 1 [uniswap-v3-fee-low]),",
+                    "last-30-mins-eth-btc: uniswap-v3-twap(weth 18 wbtc 8 int-mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "weth-dai: uniswap-v3-twap(dai 18 weth 18 1000 0 [uniswap-v3-fee-low]),"
+                    "dai-weth: uniswap-v3-twap(weth 18 dai 18 1000 0 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
