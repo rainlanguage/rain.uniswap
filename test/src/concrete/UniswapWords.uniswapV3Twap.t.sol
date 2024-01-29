@@ -66,7 +66,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             expectedStack,
-            "uniswap-v3-twap wbtc weth"
+            "uniswap-v3-twap"
         );
     }
 }
