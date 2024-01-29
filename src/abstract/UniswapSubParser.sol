@@ -71,7 +71,7 @@ function authoringMetaV2() pure returns (bytes memory) {
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
         "uniswap-v3-twap",
-        "Computes the time weighted average price of a given token pair over a given period of time. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the start time ago in seconds, the fourth is the end time ago in seconds, and the fifth is the pool fee. If the start and end times are both 0, returns the current price rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
+        "Computes the time weighted average price of a given token pair over a given period of time, as an 18 decimal fixed point ratio. Input/output token directions are from the perspective of the Uniswap contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals, the fifth and sixth are the start and end times ago in seconds, and the seventh is the pool fee. If the start and end times are both 0, returns the current price rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
     );
     return abi.encode(meta);
 }
