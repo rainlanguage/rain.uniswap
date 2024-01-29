@@ -70,6 +70,12 @@ abstract contract OpUniswapV3Twap {
             );
         }
 
+        // The sqrt price is always token0/token1, so if the tokens are in the
+        // wrong order, we need to invert the sqrt price.
+        if (token1 <= token0) {
+            sqrtPriceX96 = uint160(uint256(2 ** 192) / sqrtPriceX96);
+        }
+
         // `uint256(type(uint160).max) * 1e18` doesn't overflow, so this can't
         // either.
         // We rely on the compiler to optimise the 2 ** 192 out.
@@ -94,13 +100,14 @@ abstract contract OpUniswapV3Twap {
         // regardless of the token decimals gives us a consistent representation
         // of "price" as a ratio, even though it's useless for actual token
         // movements.
-        uint256 twap = Math.mulDiv(sqrtPriceX96, uint256(sqrtPriceX96) * 1e18, 2 ** 192);
-
-        // inverse as 18 decimal math if the token order doesn't match the
-        // uniswap internal sort.
-        if (token1 <= token0) {
-            twap = 1e36 / twap;
-        }
+        //
+        // When we divide by 2 ** 192, we can lose a lot of precision, that we
+        // MAY want to keep if the token decimals are very different, and then
+        // we scale the twap back up by the difference in decimals. For this
+        // reason we scale the twap up by an additional 1e18 here, and then
+        // rescale according to the token decimals, then remove the additional
+        // 1e18 scaling at the end.
+        uint256 twap = Math.mulDiv(uint256(sqrtPriceX96) * 1e18, uint256(sqrtPriceX96) * 1e18, 2 ** 192);
 
         // Scale the twap to 18 decimal fixed point ratio, according to each
         // token's decimals.
@@ -115,6 +122,9 @@ abstract contract OpUniswapV3Twap {
 
             twap = LibFixedPointDecimalScale.scaleBy(twap, int8(uint8(token0Decimals)) - int8(uint8(token1Decimals)), 0);
         }
+
+        // Remove the additional 1e18 scaling we did above in the mulDiv.
+        twap /= 1e18;
 
         assembly ("memory-safe") {
             mstore(inputs, 1)
