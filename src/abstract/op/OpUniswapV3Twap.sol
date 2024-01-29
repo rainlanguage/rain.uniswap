@@ -102,8 +102,7 @@ abstract contract OpUniswapV3Twap {
         // movements.
         //
         // When we divide by 2 ** 192, we can lose a lot of precision, that we
-        // MAY want to keep if the token decimals are very different, and then
-        // we scale the twap back up by the difference in decimals. For this
+        // MAY want to keep if the token decimals are very different. For this
         // reason we scale the twap up by an additional 1e18 here, and then
         // rescale according to the token decimals, then remove the additional
         // 1e18 scaling at the end.
