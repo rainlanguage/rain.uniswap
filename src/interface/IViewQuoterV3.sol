@@ -3,6 +3,10 @@ pragma solidity ^0.8.18;
 
 /// IViewQuoterV3 is IQuoter but view
 interface IViewQuoterV3 {
+    /// This is on the Quoter contract even though it isn't in the upstream
+    /// interface.
+    function factory() external view returns (address);
+
     /// IQuoter.quoteExactInput but view
     function quoteExactInput(bytes memory path, uint256 amountIn)
         external
