@@ -18,7 +18,7 @@ import {
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
-    hex"01000000000000000000400002000000000002000080000008000000000000000040055fc5ab013cf36e03fd758204722c3100faeccc026bddff";
+    hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
 bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d190d440d6f0d840d99";
@@ -50,28 +50,28 @@ uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 6;
 function authoringMetaV2() pure returns (bytes memory) {
     AuthoringMetaV2[] memory meta = new AuthoringMetaV2[](SUB_PARSER_WORD_PARSERS_LENGTH);
     meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = AuthoringMetaV2(
-        "uniswap-v2-amount-in",
-        "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV2 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well."
+        "uniswap-v2-quote-exact-output",
+        "Quotes the minimum absolute amount of input tokens required to get a given amount of output tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = AuthoringMetaV2(
-        "uniswap-v2-amount-out",
-        "Computes the maximum amount of output tokens received from a given amount of input tokens from a UniswapV2 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. If the operand is 1 the last time the prices changed will be returned as well."
+        "uniswap-v2-quote-exact-input",
+        "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. If the operand is 1 the last time the prices changed will be returned as well."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = AuthoringMetaV2(
-        "uniswap-v2-quote",
-        "Given an amount of token A, calculates the equivalent valued amount of token B. The first input is token A's address, the second is token B's address and the third is the amount of token A. If the operand is 1 the last time the prices changed will be returned as well."
+        "uniswap-v2-spot-output-ratio",
+        "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals. If the operand is 1 the last time the ratio changed will be returned as well."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
         "uniswap-v3-quote-exact-output",
-        "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
+        "Quotes the minimum absolute amount of input tokens required to get a given exact amount of output tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
         "uniswap-v3-quote-exact-input",
-        "Computes the maximum amount of output tokens received from a given amount of input tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
+        "Quotes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
-        "uniswap-v3-twap",
-        "Computes the time weighted average price of a given token pair over a given period of time, as an 18 decimal fixed point ratio. Input/output token directions are from the perspective of the Uniswap contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals, the fifth and sixth are the start and end times ago in seconds, and the seventh is the pool fee. If the start and end times are both 0, returns the current price rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
+        "uniswap-v3-twap-output-ratio",
+        "The time weighted average output ratio (output per unit of input) of a given token pair over a given period of time, as an 18 decimal fixed point ratio. Input/output token directions are from the perspective of the Uniswap pool contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals, the fifth and sixth are the start and end times ago in seconds, and the seventh is the pool fee. If the start and end times are both 0, returns the current instantaneous \"spot\" ratio rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
     );
     return abi.encode(meta);
 }
