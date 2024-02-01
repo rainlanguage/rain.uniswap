@@ -13,7 +13,7 @@ contract LibOpUniswapV2QuoteTest is Test, OpUniswapV2Quote {
     function testIntegrity(Operand operand, uint256 inputs, uint256 outputs) external {
         (uint256 calculatedInputs, uint256 calculatedOutputs) =
             OpUniswapV2Quote.integrityUniswapV2Quote(operand, inputs, outputs);
-        assertEq(calculatedInputs, 3);
+        assertEq(calculatedInputs, 4);
         assertEq(calculatedOutputs, Operand.unwrap(operand) & 1 > 0 ? 2 : 1);
     }
 }
