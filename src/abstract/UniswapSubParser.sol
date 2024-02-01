@@ -18,7 +18,7 @@ import {
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
-    hex"01000000000000000000600002000000000001000000000008000000000000000040055fc5ab013cf36e047495c100faeccc03c18c4e026bddff";
+    hex"01000000000000000000400002000000000002000080000008000000000000000040055fc5ab013cf36e03fd758204722c3100faeccc026bddff";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
 bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d190d440d6f0d840d99";
@@ -62,11 +62,11 @@ function authoringMetaV2() pure returns (bytes memory) {
         "Given an amount of token A, calculates the equivalent valued amount of token B. The first input is token A's address, the second is token B's address and the third is the amount of token A. If the operand is 1 the last time the prices changed will be returned as well."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
-        "uniswap-v3-exact-output",
+        "uniswap-v3-quote-exact-output",
         "Computes the minimum amount of input tokens required to get a given amount of output tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
-        "uniswap-v3-exact-input",
+        "uniswap-v3-quote-exact-input",
         "Computes the maximum amount of output tokens received from a given amount of input tokens from a UniswapV3 pair. Input/output token directions are from the perspective of the Uniswap contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
     );
     meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
