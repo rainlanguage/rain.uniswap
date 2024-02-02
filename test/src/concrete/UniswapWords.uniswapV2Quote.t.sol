@@ -23,19 +23,21 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
     function testUniswapWordsUniswapV2QuoteHappyFork() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
-        uint256[] memory expectedStack = new uint256[](4);
+        uint256[] memory expectedStack = new uint256[](5);
         // input
         // wbtc
-        expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        expectedStack[4] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
         // output
         // weth
-        expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        expectedStack[3] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // weth equivalent to 1e18 wbtc without slippage etc.
         // is 18 decimals for the 1e18 weth and an extra 10 for the difference
         // between wbtc and weth (8 vs 10).
-        expectedStack[1] = 183791234527832571606867631534;
+        expectedStack[2] = 18379123452783257160;
         // timestamp
-        expectedStack[0] = 1706347127;
+        expectedStack[1] = 1706347127;
+        // weth-btc
+        expectedStack[0] = 54409558898118408;
 
         checkHappy(
             bytes(
@@ -45,11 +47,12 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "quote timestamp: uniswap-v2-quote<1>(wbtc weth 1e18);"
+                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc 8 weth 18),"
+                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth 18 wbtc 8);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-quote wbtc weth"
+            "uniswap-v2-spot-output-ratio wbtc weth"
         );
     }
 }

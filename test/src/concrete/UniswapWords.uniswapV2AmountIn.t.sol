@@ -44,11 +44,11 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "amount-in timestamp: uniswap-v2-amount-in<1>(wbtc weth 1e18);"
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1e18);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-amount-in wbtc weth"
+            "uniswap-v2-quote-exact-output wbtc weth"
         );
     }
 }

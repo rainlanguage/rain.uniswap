@@ -10,7 +10,7 @@ import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
-error UniswapV3TwapTokenOrder(uint256 token0, uint256 token1);
+error UniswapV3TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
 error UniswapV3TwapTokenDecimalsOverflow(address token, uint256 decimals);
 
 /// @title OpUniswapV3Twap
@@ -26,19 +26,18 @@ abstract contract OpUniswapV3Twap {
 
     //slither-disable-next-line dead-code
     function runUniswapV3Twap(Operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
-        uint256 token0;
-        uint256 token0Decimals;
-        uint256 token1;
-        //slither-disable-next-line similar-names
-        uint256 token1Decimals;
+        uint256 tokenIn;
+        uint256 tokenInDecimals;
+        uint256 tokenOut;
+        uint256 tokenOutDecimals;
         uint256 startSecondsAgo;
         uint256 endSecondsAgo;
         uint256 fee;
         assembly ("memory-safe") {
-            token0 := mload(add(inputs, 0x20))
-            token0Decimals := mload(add(inputs, 0x40))
-            token1 := mload(add(inputs, 0x60))
-            token1Decimals := mload(add(inputs, 0x80))
+            tokenIn := mload(add(inputs, 0x20))
+            tokenInDecimals := mload(add(inputs, 0x40))
+            tokenOut := mload(add(inputs, 0x60))
+            tokenOutDecimals := mload(add(inputs, 0x80))
             startSecondsAgo := mload(add(inputs, 0xa0))
             endSecondsAgo := mload(add(inputs, 0xc0))
             fee := mload(add(inputs, 0xe0))
@@ -51,7 +50,7 @@ abstract contract OpUniswapV3Twap {
         IUniswapV3Pool pool = IUniswapV3Pool(
             LibUniswapV3PoolAddress.computeAddress(
                 v3Factory(),
-                LibUniswapV3PoolAddress.getPoolKey(address(uint160(token0)), address(uint160(token1)), uint24(fee))
+                LibUniswapV3PoolAddress.getPoolKey(address(uint160(tokenIn)), address(uint160(tokenOut)), uint24(fee))
             )
         );
 
@@ -75,7 +74,7 @@ abstract contract OpUniswapV3Twap {
 
         // The sqrt price is always token0/token1, so if the tokens are in the
         // wrong order, we need to invert the sqrt price.
-        if (token1 <= token0) {
+        if (tokenOut <= tokenIn) {
             sqrtPriceX96 = uint160(uint256(2 ** 192) / sqrtPriceX96);
         }
 
@@ -114,15 +113,16 @@ abstract contract OpUniswapV3Twap {
         // Scale the twap to 18 decimal fixed point ratio, according to each
         // token's decimals.
         {
-            if (token0Decimals > uint256(uint8(type(int8).max))) {
-                revert UniswapV3TwapTokenDecimalsOverflow(address(uint160(token0)), token0Decimals);
+            if (tokenInDecimals > uint256(uint8(type(int8).max))) {
+                revert UniswapV3TwapTokenDecimalsOverflow(address(uint160(tokenIn)), tokenInDecimals);
             }
 
-            if (token1Decimals > uint256(uint8(type(int8).max))) {
-                revert UniswapV3TwapTokenDecimalsOverflow(address(uint160(token1)), token1Decimals);
+            if (tokenOutDecimals > uint256(uint8(type(int8).max))) {
+                revert UniswapV3TwapTokenDecimalsOverflow(address(uint160(tokenOut)), tokenOutDecimals);
             }
 
-            twap = LibFixedPointDecimalScale.scaleBy(twap, int8(uint8(token0Decimals)) - int8(uint8(token1Decimals)), 0);
+            twap =
+                LibFixedPointDecimalScale.scaleBy(twap, int8(uint8(tokenInDecimals)) - int8(uint8(tokenOutDecimals)), 0);
         }
 
         // Remove the additional 1e18 scaling we did above in the mulDiv.

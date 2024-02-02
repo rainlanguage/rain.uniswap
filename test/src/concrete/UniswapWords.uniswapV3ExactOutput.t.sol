@@ -43,12 +43,12 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "amount-in-wbtc-weth: uniswap-v3-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]),"
-                    "amount-in-weth-wbtc: uniswap-v3-exact-output(weth wbtc 1e8 [uniswap-v3-fee-low]);"
+                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]),"
+                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1e8 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
-            "uniswap-v3-exact-output wbtc weth"
+            "uniswap-v3-quote-exact-output wbtc weth"
         );
     }
 }
