@@ -9,7 +9,6 @@ import {EXPRESSION_DEPLOYER_NP_META_PATH} from
 import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
 
 contract TwapForkTest is OpTest {
-
     using Strings for address;
 
     uint256 constant BLOCK_NUMBER = 52430220;
@@ -20,7 +19,7 @@ contract TwapForkTest is OpTest {
 
     function constructionMetaPath() internal pure override returns (string memory) {
         return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
-    } 
+    }
 
     function testUniswapWordsUniswapV3TwapHappyForkPolygon() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
@@ -32,7 +31,7 @@ contract TwapForkTest is OpTest {
         expectedStack[2] = uint256(uint160(0xc2132D05D31c914a87C6611C10748AEb04B58e8F));
         // assertion not a concern for now
         expectedStack[1] = 11;
-        expectedStack[0] = 11; 
+        expectedStack[0] = 11;
 
         checkHappy(
             bytes(
@@ -44,13 +43,10 @@ contract TwapForkTest is OpTest {
                     "usdt: 0xc2132D05D31c914a87C6611C10748AEb04B58e8F,",
                     "trend-numerator: uniswap-v3-twap-output-ratio(usdt 6 trade 18 1800 0 [uniswap-v3-fee-high]),"
                     "trend-denominator: uniswap-v3-twap-output-ratio(usdt 6 trade 18 14400 0 [uniswap-v3-fee-high]);"
-
                 )
             ),
             expectedStack,
             "uniswap-v3-twap-output-ratio"
         );
     }
-
-
 }
