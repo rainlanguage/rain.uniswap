@@ -15,7 +15,7 @@ contract TwapForkTest is OpTest {
     uint256 constant BLOCK_NUMBER = 52430220;
 
     function beforeOpTestConstructor() internal override {
-        vm.createSelectFork(vm.envString("RPC_URL_POLYGON"), BLOCK_NUMBER);
+        vm.createSelectFork("https://1rpc.io/matic", BLOCK_NUMBER);
     }
 
     function constructionMetaPath() internal pure override returns (string memory) {
