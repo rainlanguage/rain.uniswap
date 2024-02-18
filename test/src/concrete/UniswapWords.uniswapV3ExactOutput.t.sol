@@ -51,4 +51,144 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
             "uniswap-v3-quote-exact-output wbtc weth"
         );
     }
+
+    function testUniswapWordsUniswapV3ExactOutputZeroInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_ _: uniswap-v3-quote-exact-output();"
+                )
+            ),
+            2,
+            4,
+            0
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputOneInput() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc);"
+                )
+            ),
+            3,
+            4,
+            1
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputTwoInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc weth);"
+                )
+            ),
+            4,
+            4,
+            2
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputThreeInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18);"
+                )
+            ),
+            5,
+            4,
+            3
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputFiveInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18 0xdeadbeef 1e18);"
+                )
+            ),
+            7,
+            4,
+            5
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputZeroOutputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadOutputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    ": uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                )
+            ),
+            6,
+            1,
+            0
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputTwoOutputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadOutputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                )
+            ),
+            6,
+            1,
+            2
+        );
+    }
 }
