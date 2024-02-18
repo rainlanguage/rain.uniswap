@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: CAL
 pragma solidity =0.8.19;
 
-import {OpTest} from "rain.interpreter/../test/util/abstract/OpTest.sol";
+import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
-    "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
+    "rain.interpreter/../test/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
 
@@ -68,6 +68,180 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
             ),
             expectedStack,
             "uniswap-v3-twap-output-ratio"
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapZeroInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v3-twap-output-ratio();"
+                )
+            ),
+            0,
+            7,
+            0
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapOneInput() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v3-twap-output-ratio(0);"
+                )
+            ),
+            1,
+            7,
+            1
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapTwoInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0);"
+                )
+            ),
+            2,
+            7,
+            2
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapThreeInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0);"
+                )
+            ),
+            3,
+            7,
+            3
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapFourInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0 0);"
+                )
+            ),
+            4,
+            7,
+            4
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapFiveInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0);"
+                )
+            ),
+            5,
+            7,
+            5
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapSixInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0 0);"
+                )
+            ),
+            6,
+            7,
+            6
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapEightInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0 0);"
+                )
+            ),
+            8,
+            7,
+            8
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapZeroOutputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadOutputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    ": uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
+                )
+            ),
+            7,
+            1,
+            0
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapTwoOutputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadOutputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
+                )
+            ),
+            7,
+            1,
+            2
         );
     }
 }

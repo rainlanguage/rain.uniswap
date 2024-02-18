@@ -21,13 +21,13 @@ bytes constant SUB_PARSER_PARSE_META =
     hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d190d440d6f0d840d99";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d010d140d270d3a0d4d";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"16b216b216b2174717471747";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"16641664166416f916f916f9";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"16a9";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"165b";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -241,99 +241,84 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the amount in opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV2AmountInSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV2AmountInSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()),
-            constantsHeight,
-            inputsByte,
-            Operand.unwrap(operand) & 1 > 0 ? 2 : 1,
-            operand,
-            OPCODE_UNISWAP_V2_AMOUNT_IN
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V2_AMOUNT_IN
         );
     }
 
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the amount out opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV2AmountOutSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV2AmountOutSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()),
-            constantsHeight,
-            inputsByte,
-            Operand.unwrap(operand) & 1 > 0 ? 2 : 1,
-            operand,
-            OPCODE_UNISWAP_V2_AMOUNT_OUT
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V2_AMOUNT_OUT
         );
     }
 
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the quote opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV2QuoteSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV2QuoteSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()),
-            constantsHeight,
-            inputsByte,
-            Operand.unwrap(operand) & 1 > 0 ? 2 : 1,
-            operand,
-            OPCODE_UNISWAP_V2_QUOTE
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V2_QUOTE
         );
     }
 
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the exact output opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV3ExactOutputSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV3ExactOutputSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_OUTPUT
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V3_EXACT_OUTPUT
         );
     }
 
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the exact input opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV3ExactInputSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV3ExactInputSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_EXACT_INPUT
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V3_EXACT_INPUT
         );
     }
 
     /// Thin wrapper around LibSubParse.subParserExtern that provides the extern
     /// address and index of the TWAP opcode index in the extern.
     //slither-disable-next-line dead-code
-    function uniswapV3TwapSubParser(uint256 constantsHeight, uint256 inputsByte, Operand operand)
+    function uniswapV3TwapSubParser(uint256 constantsHeight, uint256 ioByte, Operand operand)
         internal
         view
         returns (bool, bytes memory, uint256[] memory)
     {
         //slither-disable-next-line unused-return
         return LibSubParse.subParserExtern(
-            IInterpreterExternV3(extern()), constantsHeight, inputsByte, 1, operand, OPCODE_UNISWAP_V3_TWAP
+            IInterpreterExternV3(extern()), constantsHeight, ioByte, operand, OPCODE_UNISWAP_V3_TWAP
         );
     }
 }
