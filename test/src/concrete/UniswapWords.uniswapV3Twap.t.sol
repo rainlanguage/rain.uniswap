@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: CAL
 pragma solidity =0.8.19;
 
-import {OpTest} from "rain.interpreter/../test/util/abstract/OpTest.sol";
+import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {EXPRESSION_DEPLOYER_NP_META_PATH} from
-    "rain.interpreter/../test/util/lib/constants/ExpressionDeployerNPConstants.sol";
+    "rain.interpreter/../test/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
 
