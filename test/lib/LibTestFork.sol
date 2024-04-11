@@ -4,7 +4,6 @@ pragma solidity ^0.8.19;
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 
 uint256 constant BLOCK_NUMBER = 19097117;
-address constant UNISWAP_V3_QUOTER = 0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24;
 
 import {Vm} from "forge-std/Vm.sol";
 

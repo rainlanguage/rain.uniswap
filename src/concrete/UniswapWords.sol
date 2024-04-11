@@ -16,7 +16,7 @@ import {
     SUB_PARSER_LITERAL_PARSERS,
     BaseRainterpreterSubParserNPE2,
     AuthoringMetaV2,
-    authoringMetaV2
+    LibUniswapSubParser
 } from "../abstract/UniswapSubParser.sol";
 
 /// @title UniswapWords
