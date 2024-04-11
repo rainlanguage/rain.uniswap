@@ -2,7 +2,7 @@
 pragma solidity =0.8.19;
 
 import {Test} from "forge-std/Test.sol";
-import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
+import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {OpUniswapV2Quote} from "src/abstract/op/OpUniswapV2Quote.sol";
 
 contract LibOpUniswapV2QuoteTest is Test, OpUniswapV2Quote {

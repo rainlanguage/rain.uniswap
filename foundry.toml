@@ -29,6 +29,7 @@ fs_permissions = [
 
 remappings = [
     "rain.interpreter/=lib/rain.interpreter/src/",
+    "rain.interpreter.interface/=lib/rain.interpreter/lib/rain.interpreter.interface/src/",
 ]
 
 [fuzz]
