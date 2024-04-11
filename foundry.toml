@@ -31,6 +31,7 @@ remappings = [
     "rain.interpreter/=lib/rain.interpreter/src/",
     "rain.interpreter.interface/=lib/rain.interpreter/lib/rain.interpreter.interface/src/",
     "rain.metadata/=lib/rain.interpreter/lib/rain.metadata/src/",
+    "rain.intorastring/=lib/rain.interpreter/lib/rain.intorastring/",
 ]
 
 [fuzz]
