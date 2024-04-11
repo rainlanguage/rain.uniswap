@@ -20,12 +20,13 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v4
       - uses: DeterminateSystems/magic-nix-cache-action@v2
 
+      - run: nix run .#uniswap-prelude
+
       - run: nix run .#rainix-sol-prelude
         working-directory: lib/rain.interpreter
       - run: nix run .#i9r-prelude
         working-directory: lib/rain.interpreter
 
-      - run: nix run .#uniswap-prelude
       - run: nix run .#rainix-sol-prelude
       - name: Run ${{ matrix.task }}
         env:
