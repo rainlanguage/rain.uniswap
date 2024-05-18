@@ -3,10 +3,11 @@
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
+    rain.url = "github:rainlanguage/rain.cli";
     rainix.url = "github:rainprotocol/rainix";
   };
 
-  outputs = { self, flake-utils, rainix, ... }:
+  outputs = { self, flake-utils, rainix, rain, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = rainix.pkgs.${system};
@@ -37,7 +38,7 @@
         } // rainix.packages.${system};
 
         devShells.default = pkgs.mkShell {
-          packages = [ packages.uniswap-prelude ];
+          packages = [ packages.uniswap-prelude rain.defaultPackage.${system} ];
           inputsFrom = [ rainix.devShells.${system}.default ];
         };
       }
