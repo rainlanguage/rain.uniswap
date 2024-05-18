@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
@@ -14,10 +14,6 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
 
     function beforeOpTestConstructor() internal override {
         vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
-    }
-
-    function constructionMetaPath() internal pure override returns (string memory) {
-        return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
     }
 
     function testUniswapWordsUniswapV3ExactInputHappyFork() external {
