@@ -11,7 +11,7 @@ library LibDeploy {
     function newQuoter(Vm vm) internal returns (address) {
         // https://book.getfoundry.sh/cheatcodes/get-code#examples
         bytes memory code = abi.encodePacked(
-            vm.getCode("quoter/Quoter.sol:Quoter"), abi.encode(vm.envOr("UNI_V3_FACTORY", UNISWAP_V3_FACTORY))
+            vm.getCode("quoter/Quoter.sol:Quoter:0.7.6"), abi.encode(vm.envOr("UNI_V3_FACTORY", UNISWAP_V3_FACTORY))
         );
         address quoter;
         assembly ("memory-safe") {
