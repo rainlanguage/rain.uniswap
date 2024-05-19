@@ -143,7 +143,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef 0xdeadc0de 1e18);"
+                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef 0xdeadc0de 1);"
                 )
             ),
             7,
@@ -283,7 +283,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef 0xdeadc0de 1e18);"
+                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef 0xdeadc0de 1);"
                 )
             ),
             7,

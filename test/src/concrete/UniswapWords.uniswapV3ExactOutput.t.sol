@@ -119,7 +119,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18);"
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1);"
                 )
             ),
             5,
@@ -139,7 +139,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18 0xdeadbeef 1e18);"
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18 0xdeadbeef 1);"
                 )
             ),
             7,
@@ -159,7 +159,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                    ": uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,
@@ -179,7 +179,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,
