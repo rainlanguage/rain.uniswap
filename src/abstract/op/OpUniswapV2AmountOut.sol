@@ -3,6 +3,9 @@ pragma solidity ^0.8.18;
 
 import {LibUniswapV2} from "../../lib/LibUniswapV2.sol";
 import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
+import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {FIXED_POINT_ONE} from "rain.math.fixedpoint/lib/FixedPointDecimalConstants.sol";
+import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 
 /// @title OpUniswapV2AmountOut
 /// @notice Opcode to calculate the amount out for a Uniswap V2 pair.
@@ -33,16 +36,33 @@ abstract contract OpUniswapV2AmountOut {
             amountIn := mload(add(inputs, 0x60))
             withTime := and(operand, 1)
         }
+        address tokenInAddress = address(uint160(tokenIn));
+        address tokenOutAddress = address(uint160(tokenOut));
+
+        // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
+        uint256 tokenInDecimals = IERC20Metadata(tokenInAddress).decimals();
+
         (uint256 amountOut, uint256 reserveTimestamp) = LibUniswapV2.getAmountOutByTokenWithTime(
-            v2Factory(), address(uint160(tokenIn)), address(uint160(tokenOut)), amountIn
+            v2Factory(),
+            tokenInAddress,
+            tokenOutAddress,
+            // Default of erroring on overflow is safest as saturating will lose
+            // precision.
+            // Default rounding down.
+            LibFixedPointDecimalScale.scaleN(amountIn, tokenInDecimals, 0)
         );
 
+        // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
+        uint256 tokenOutDecimals = IERC20Metadata(tokenOutAddress).decimals();
+        amountOut = LibFixedPointDecimalScale.scale18(amountOut, tokenOutDecimals, 0);
+
+        uint256 fixedPointOne = FIXED_POINT_ONE;
         assembly ("memory-safe") {
             mstore(inputs, 1)
             mstore(add(inputs, 0x20), amountOut)
             if withTime {
                 mstore(inputs, 2)
-                mstore(add(inputs, 0x40), reserveTimestamp)
+                mstore(add(inputs, 0x40), mul(reserveTimestamp, fixedPointOne))
             }
         }
         return inputs;

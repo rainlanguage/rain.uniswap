@@ -27,13 +27,11 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         // weth
         expectedStack[3] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // weth equivalent to 1e18 wbtc without slippage etc.
-        // is 18 decimals for the 1e18 weth and an extra 10 for the difference
-        // between wbtc and weth (8 vs 10).
-        expectedStack[2] = 18379123452783257160;
+        expectedStack[2] = 18.37912345278325716e18;
         // timestamp
-        expectedStack[1] = 1706347127;
+        expectedStack[1] = 1706347127e18;
         // weth-btc
-        expectedStack[0] = 54409558898118408;
+        expectedStack[0] = 0.054409558898118408e18;
 
         checkHappy(
             bytes(
@@ -43,8 +41,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc 8 weth 18),"
-                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth 18 wbtc 8);"
+                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth),"
+                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth wbtc);"
                 )
             ),
             expectedStack,
@@ -67,7 +65,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             2,
-            4,
+            2,
             0
         );
     }
@@ -87,28 +85,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             3,
-            4,
+            2,
             1
-        );
-    }
-
-    function testUniswapWordsUniswapV2QuoteWithTimestampTwoInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth);"
-                )
-            ),
-            4,
-            4,
-            2
         );
     }
 
@@ -127,28 +105,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             5,
-            4,
+            2,
             3
-        );
-    }
-
-    function testUniswapWordsUniswapV2QuoteWithTimestampFiveInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef 0xdeadc0de 1);"
-                )
-            ),
-            7,
-            4,
-            5
         );
     }
 
@@ -163,10 +121,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef 0xdeadc0de);"
+                    ": uniswap-v2-spot-output-ratio<1>(wbtc weth);"
                 )
             ),
-            6,
+            4,
             2,
             0
         );
@@ -183,10 +141,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef 0xdeadc0de);"
+                    "_: uniswap-v2-spot-output-ratio<1>(wbtc weth);"
                 )
             ),
-            6,
+            4,
             2,
             1
         );
@@ -207,7 +165,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             2,
-            4,
+            2,
             0
         );
     }
@@ -227,28 +185,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             3,
-            4,
+            2,
             1
-        );
-    }
-
-    function testUniswapWordsUniswapV2QuoteWithoutTimestampTwoInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc weth);"
-                )
-            ),
-            4,
-            4,
-            2
         );
     }
 
@@ -267,28 +205,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             5,
-            4,
+            2,
             3
-        );
-    }
-
-    function testUniswapWordsUniswapV2QuoteWithoutTimestampFiveInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef 0xdeadc0de 1);"
-                )
-            ),
-            7,
-            4,
-            5
         );
     }
 
@@ -303,10 +221,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef 0xdeadc0de);"
+                    ": uniswap-v2-spot-output-ratio(wbtc weth);"
                 )
             ),
-            6,
+            4,
             1,
             0
         );
@@ -323,10 +241,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef 0xdeadc0de);"
+                    "_ _: uniswap-v2-spot-output-ratio(wbtc weth);"
                 )
             ),
-            6,
+            4,
             1,
             2
         );

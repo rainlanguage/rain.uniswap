@@ -26,11 +26,10 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         // output
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount in
-        // wbtc has 8 decimals and weth has 18 so the amount in looks very small.
-        expectedStack[1] = 5460125;
+        // min amount in
+        expectedStack[1] = 0.05460125e18;
         // timestamp
-        expectedStack[0] = 1706347127;
+        expectedStack[0] = 1706347127e18;
 
         checkHappy(
             bytes(
@@ -45,6 +44,38 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
             ),
             expectedStack,
             "uniswap-v2-quote-exact-output wbtc weth"
+        );
+    }
+
+    // Test a fork in the reverse direction, from weth to wbtc.
+    function testUniswapWordsUniswapV2AmountInHappyForkReverse() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        uint256[] memory expectedStack = new uint256[](4);
+        // input
+        // weth
+        expectedStack[3] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        // output
+        // wbtc
+        expectedStack[2] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        // min amount in
+        expectedStack[1] = 18.609605233934396799e18;
+        // timestamp
+        expectedStack[0] = 1706347127e18;
+
+        checkHappy(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(weth wbtc 1);"
+                )
+            ),
+            expectedStack,
+            "uniswap-v2-quote-exact-output weth wbtc"
         );
     }
 
