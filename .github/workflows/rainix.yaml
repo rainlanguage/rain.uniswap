@@ -25,9 +25,14 @@ jobs:
       - run: nix develop -c rainix-sol-prelude
       - name: Run ${{ matrix.task }}
         env:
-          ETH_RPC_URL: ${{ secrets.CI_DEPLOY_RPC_URL }}
+          ETH_RPC_URL: ${{ secrets.CI_DEPLOY_SEPOLIA_RPC_URL || vars.CI_DEPLOY_SEPOLIA_RPC_URL }}
           ETHERSCAN_API_KEY: ${{ secrets.EXPLORER_VERIFICATION_KEY }}
-          RPC_URL_ETHEREUM_FORK: ${{ secrets.RPC_URL_ETHEREUM_FORK }}
+          DEPLOY_BROADCAST: ''
+          DEPLOY_VERIFIER: ''
+          DEPLOY_METABOARD_ADDRESS: ${{ vars.CI_DEPLOY_SEPOLIA_METABOARD_ADDRESS }}
+          CI_FORK_SEPOLIA_BLOCK_NUMBER: ${{ vars.CI_FORK_SEPOLIA_BLOCK_NUMBER }}
+          CI_FORK_SEPOLIA_DEPLOYER_ADDRESS: ${{ vars.CI_FORK_SEPOLIA_DEPLOYER_ADDRESS }}
+          CI_DEPLOY_SEPOLIA_RPC_URL: ${{ secrets.CI_DEPLOY_SEPOLIA_RPC_URL || vars.CI_DEPLOY_SEPOLIA_RPC_URL }}
           UNI_V2_FACTORY: '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f'
           UNI_V3_FACTORY: '0x1F98431c8aD98523631AE4a59f267346ea31F984'
         run: nix develop -c ${{ matrix.task }}
