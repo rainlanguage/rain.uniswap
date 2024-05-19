@@ -26,10 +26,10 @@ bytes constant SUB_PARSER_PARSE_META =
 bytes constant SUB_PARSER_WORD_PARSERS = hex"0d180d3a0d4d0d600d730d86";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"1a161a161a161a7b1a7b1a7b";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"1d521d521d521db71db71db7";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1a0d";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1d49";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;

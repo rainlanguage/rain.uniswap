@@ -8,6 +8,7 @@ import {LibUniswapV3TickMath} from "../../lib/v3/LibUniswapV3TickMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {LibFixedPointDecimalScale, DECIMAL_MAX_SAFE_INT} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
+import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
 error UniswapV3TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
@@ -21,29 +22,27 @@ abstract contract OpUniswapV3Twap {
 
     //slither-disable-next-line dead-code
     function integrityUniswapV3Twap(Operand, uint256, uint256) internal pure returns (uint256, uint256) {
-        return (7, 1);
+        return (5, 1);
     }
 
     //slither-disable-next-line dead-code
     function runUniswapV3Twap(Operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenIn;
-        uint256 tokenInDecimals;
         uint256 tokenOut;
-        uint256 tokenOutDecimals;
         uint256 startSecondsAgo;
         uint256 endSecondsAgo;
         uint256 fee;
         assembly ("memory-safe") {
             tokenIn := mload(add(inputs, 0x20))
-            tokenInDecimals := mload(add(inputs, 0x40))
-            tokenOut := mload(add(inputs, 0x60))
-            tokenOutDecimals := mload(add(inputs, 0x80))
-            startSecondsAgo := mload(add(inputs, 0xa0))
-            endSecondsAgo := mload(add(inputs, 0xc0))
-            fee := mload(add(inputs, 0xe0))
+            tokenOut := mload(add(inputs, 0x40))
+            startSecondsAgo := mload(add(inputs, 0x60))
+            endSecondsAgo := mload(add(inputs, 0x80))
+            fee := mload(add(inputs, 0xa0))
         }
-        tokenInDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenInDecimals, DECIMAL_MAX_SAFE_INT);
-        tokenOutDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenOutDecimals, DECIMAL_MAX_SAFE_INT);
+        // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
+        uint256 tokenInDecimals = IERC20Metadata(address(uint160(tokenIn))).decimals();
+        uint256 tokenOutDecimals = IERC20Metadata(address(uint160(tokenOut))).decimals();
+
         startSecondsAgo = LibFixedPointDecimalScale.decimalOrIntToInt(startSecondsAgo, DECIMAL_MAX_SAFE_INT);
         endSecondsAgo = LibFixedPointDecimalScale.decimalOrIntToInt(endSecondsAgo, DECIMAL_MAX_SAFE_INT);
 

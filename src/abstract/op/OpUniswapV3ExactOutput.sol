@@ -3,6 +3,8 @@ pragma solidity ^0.8.18;
 
 import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {IViewQuoterV3} from "../../interface/IViewQuoterV3.sol";
+import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
+import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 /// @title OpUniswapV3ExactOutput
 /// @notice Opcode to calculate the amount in for an exact output from a Uniswap
@@ -27,12 +29,19 @@ abstract contract OpUniswapV3ExactOutput {
             amountOut := mload(add(inputs, 0x60))
             fee := mload(add(inputs, 0x80))
         }
+
+        // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
+        uint256 tokenOutDecimals = IERC20Metadata(address(uint160(tokenOut))).decimals();
+
         (uint256 amountIn, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate) = v3Quoter()
             .quoteExactOutputSingle(
             IViewQuoterV3.QuoteExactOutputSingleParams(
                 address(uint160(tokenIn)),
                 address(uint160(tokenOut)),
-                amountOut,
+                // Default of erroring on overflow is safest as saturating will lose
+                // precision.
+                // Default rounding down.
+                LibFixedPointDecimalScale.scaleN(amountOut, tokenOutDecimals, 0),
                 uint24(fee),
                 // This is the sqrtPriceLimitX96, which is 0 for no limit.
                 // It's not even used by the quoter contract internally.
@@ -40,6 +49,11 @@ abstract contract OpUniswapV3ExactOutput {
             )
         );
         (sqrtPriceX96After, initializedTicksCrossed, gasEstimate);
+
+        // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
+        uint256 tokenInDecimals = IERC20Metadata(address(uint160(tokenIn))).decimals();
+        amountIn = LibFixedPointDecimalScale.scale18(amountIn, tokenInDecimals, 0);
+
         assembly ("memory-safe") {
             mstore(inputs, 1)
             mstore(add(inputs, 0x20), amountIn)

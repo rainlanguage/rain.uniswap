@@ -27,21 +27,21 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
         // weth
         expectedStack[8] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // twap current-price btc eth
-        expectedStack[7] = 18357262430617394206;
+        expectedStack[7] = 18.357262430617394206e18;
         // twap last-second btc eth
-        expectedStack[6] = 18355922996327998332;
+        expectedStack[6] = 18.355922996327998332e18;
         // twap 30 mins btc eth
-        expectedStack[5] = 18350417320600948012;
+        expectedStack[5] = 18.350417320600948012e18;
         // twap current-price eth btc
-        expectedStack[4] = 54474353339969539;
+        expectedStack[4] = 0.054474353339969539e18;
         // twap last-second eth btc
-        expectedStack[3] = 54478328341214141;
+        expectedStack[3] = 0.054478328341214141e18;
         // twap 30 mins eth btc
-        expectedStack[2] = 54494673474120834;
+        expectedStack[2] = 0.054494673474120834e18;
         // twap dai weth
-        expectedStack[1] = 441994201059850;
+        expectedStack[1] = 0.00044199420105985e18;
         // twap weth dai
-        expectedStack[0] = 2262473122050283788354;
+        expectedStack[0] = 2262.473122050283788354e18;
 
         checkHappy(
             bytes(
@@ -52,14 +52,14 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "dai: 0x6B175474E89094C44Da98b954EedeAC495271d0F,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "current-price-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 0 0 [uniswap-v3-fee-low]),",
-                    "last-second-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 mul(60 30) 0 [uniswap-v3-fee-low]),",
-                    "current-price-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 0 0 [uniswap-v3-fee-low]),",
-                    "last-second-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 mul(60 30) 0 [uniswap-v3-fee-low]),",
-                    "weth-dai: uniswap-v3-twap-output-ratio(dai 18 weth 18 1000 0 [uniswap-v3-fee-low]),"
-                    "dai-weth: uniswap-v3-twap-output-ratio(weth 18 dai 18 1000 0 [uniswap-v3-fee-low]);"
+                    "current-price-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 0 0 [uniswap-v3-fee-low]),",
+                    "last-second-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 2 1 [uniswap-v3-fee-low]),",
+                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "current-price-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 0 0 [uniswap-v3-fee-low]),",
+                    "last-second-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 2 1 [uniswap-v3-fee-low]),",
+                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "weth-dai: uniswap-v3-twap-output-ratio(dai weth 1000 0 [uniswap-v3-fee-low]),"
+                    "dai-weth: uniswap-v3-twap-output-ratio(weth dai 1000 0 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
@@ -77,7 +77,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             0,
-            7,
+            5,
             0
         );
     }
@@ -92,7 +92,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             1,
-            7,
+            5,
             1
         );
     }
@@ -110,7 +110,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             2,
-            7,
+            5,
             2
         );
     }
@@ -128,7 +128,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             3,
-            7,
+            5,
             3
         );
     }
@@ -146,26 +146,8 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             4,
-            7,
-            4
-        );
-    }
-
-    function testUniswapWordsUniswapV3TwapFiveInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0);"
-                )
-            ),
             5,
-            7,
-            5
+            4
         );
     }
 
@@ -182,26 +164,8 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             6,
-            7,
+            5,
             6
-        );
-    }
-
-    function testUniswapWordsUniswapV3TwapEightInputs() external {
-        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-
-        checkBadInputs(
-            bytes(
-                string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0 0);"
-                )
-            ),
-            8,
-            7,
-            8
         );
     }
 
@@ -214,10 +178,10 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    ": uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
+                    ": uniswap-v3-twap-output-ratio(0 0 0 0 0);"
                 )
             ),
-            7,
+            5,
             1,
             0
         );
@@ -232,10 +196,10 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
+                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0);"
                 )
             ),
-            7,
+            5,
             1,
             2
         );

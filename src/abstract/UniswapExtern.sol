@@ -12,9 +12,9 @@ import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"1ac01ac01ad01ae01ae01aec";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"1dfc1dfc1e0c1e1c1e1c1e28";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0e2a0fd81116137a14951554";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0e2a0fd81116137a15d517e1";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
