@@ -7,7 +7,7 @@ import {IUniswapV3Pool} from "v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 import {LibUniswapV3TickMath} from "../../lib/v3/LibUniswapV3TickMath.sol";
 import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
-import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScale, DECIMAL_MAX_SAFE_INT} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
 error UniswapV3TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
@@ -42,6 +42,10 @@ abstract contract OpUniswapV3Twap {
             endSecondsAgo := mload(add(inputs, 0xc0))
             fee := mload(add(inputs, 0xe0))
         }
+        tokenInDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenInDecimals, DECIMAL_MAX_SAFE_INT);
+        tokenOutDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenOutDecimals, DECIMAL_MAX_SAFE_INT);
+        startSecondsAgo = LibFixedPointDecimalScale.decimalOrIntToInt(startSecondsAgo, DECIMAL_MAX_SAFE_INT);
+        endSecondsAgo = LibFixedPointDecimalScale.decimalOrIntToInt(endSecondsAgo, DECIMAL_MAX_SAFE_INT);
 
         if (startSecondsAgo < endSecondsAgo) {
             revert UniswapV3TwapStartAfterEnd(startSecondsAgo, endSecondsAgo);

@@ -15,7 +15,7 @@ import {
     OPCODE_UNISWAP_V3_TWAP
 } from "./UniswapExtern.sol";
 
-bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0xf538adcb884c44d59378a197c1744ded70ffcaf4e0ec829bbf38e05f23a565d8);
+bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0x4354486f79f4ec94e40bc0afe8264fc2c993bf05781b311bcbc1d5dd71237577);
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
@@ -26,10 +26,10 @@ bytes constant SUB_PARSER_PARSE_META =
 bytes constant SUB_PARSER_WORD_PARSERS = hex"0d180d3a0d4d0d600d730d86";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"169d169d169d173217321732";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"171517151715177a177a177a";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1694";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"170c";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;

@@ -40,7 +40,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     // The amount is 1e8 to match the decimals of wbtc.
-                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(wbtc weth 1e8);"
+                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(wbtc weth 1e-10);"
                 )
             ),
             expectedStack,
@@ -119,7 +119,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-input<1>(wbtc weth 1e8);"
+                    ": uniswap-v2-quote-exact-input<1>(wbtc weth 1e-10);"
                 )
             ),
             5,
@@ -139,7 +139,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-quote-exact-input<1>(wbtc weth 1e8);"
+                    "_: uniswap-v2-quote-exact-input<1>(wbtc weth 1e-10);"
                 )
             ),
             5,
@@ -219,7 +219,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-input(wbtc weth 1e8);"
+                    ": uniswap-v2-quote-exact-input(wbtc weth 1e-10);"
                 )
             ),
             5,
@@ -239,7 +239,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-quote-exact-input(wbtc weth 1e8);"
+                    "_ _: uniswap-v2-quote-exact-input(wbtc weth 1e-10);"
                 )
             ),
             5,

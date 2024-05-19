@@ -54,10 +54,10 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     "current-price-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 0 0 [uniswap-v3-fee-low]),",
                     "last-second-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 int-mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc 8 weth 18 mul(60 30) 0 [uniswap-v3-fee-low]),",
                     "current-price-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 0 0 [uniswap-v3-fee-low]),",
                     "last-second-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 int-mul(60 30) 0 [uniswap-v3-fee-low]),",
+                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth 18 wbtc 8 mul(60 30) 0 [uniswap-v3-fee-low]),",
                     "weth-dai: uniswap-v3-twap-output-ratio(dai 18 weth 18 1000 0 [uniswap-v3-fee-low]),"
                     "dai-weth: uniswap-v3-twap-output-ratio(weth 18 dai 18 1000 0 [uniswap-v3-fee-low]);"
                 )

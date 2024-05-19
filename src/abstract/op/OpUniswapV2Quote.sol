@@ -3,7 +3,7 @@ pragma solidity ^0.8.18;
 
 import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {LibUniswapV2} from "../../lib/LibUniswapV2.sol";
-import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
+import {LibFixedPointDecimalScale, DECIMAL_MAX_SAFE_INT} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 
 error UniswapV2TwapTokenDecimalsOverflow(address token, uint256 decimals);
 error UniswapV2TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
@@ -39,6 +39,9 @@ abstract contract OpUniswapV2Quote {
             tokenOutDecimals := mload(add(inputs, 0x80))
             withTime := and(operand, 1)
         }
+        tokenInDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenInDecimals, DECIMAL_MAX_SAFE_INT);
+        tokenOutDecimals = LibFixedPointDecimalScale.decimalOrIntToInt(tokenOutDecimals, DECIMAL_MAX_SAFE_INT);
+
         // The output ratio is the amount of tokenOut per tokenIn. If we get a
         // quote for 1e18 tokenIn, the amount out is the 18 decimal ratio.
         //

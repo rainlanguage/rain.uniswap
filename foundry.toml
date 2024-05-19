@@ -6,6 +6,8 @@ libs = ["lib"]
 # See more config options https://github.com/foundry-rs/foundry/tree/master/config
 
 solc = "0.8.25"
+# https://github.com/foundry-rs/foundry/issues/7607
+unchecked_cheatcode_artifacts = true
 
 # Try to make sure the optimizer doesn't touch the output in a way that can break
 # source maps for debugging.
