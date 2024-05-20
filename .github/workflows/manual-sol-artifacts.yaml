@@ -36,17 +36,17 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v4
       - uses: DeterminateSystems/magic-nix-cache-action@v2
 
-      - run: nix run .#rainix-sol-prelude
+      - run: nix develop -c rainix-sol-prelude
         working-directory: lib/rain.interpreter
-      - run: nix run .#i9r-prelude
+      - run: nix develop -c i9r-prelude
         working-directory: lib/rain.interpreter
 
-      - run: nix run .#uniswap-prelude
-      - run: nix run .#rainix-sol-prelude
+      - run: nix develop -c uniswap-prelude
+      - run: nix develop -c rainix-sol-prelude
 
-      - run: nix develop --command rainix-sol-prelude
+      - run: nix develop -c rainix-sol-prelude
       - name: deploy to ${{ inputs.network }}
-        run: nix develop --command rainix-sol-artifacts
+        run: nix develop -c rainix-sol-artifacts
         env:
           ETH_RPC_URL: ${{ secrets[env.rpc_secret_name] || '' }}
           ETHERSCAN_API_KEY: ${{ secrets[env.etherscan_api_key_secret_name] || ''}}
