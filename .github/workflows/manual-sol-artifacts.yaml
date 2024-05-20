@@ -48,7 +48,11 @@ jobs:
       - name: deploy to ${{ inputs.network }}
         run: nix develop -c rainix-sol-artifacts
         env:
-          ETH_RPC_URL: ${{ secrets[env.rpc_secret_name] || '' }}
-          ETHERSCAN_API_KEY: ${{ secrets[env.etherscan_api_key_secret_name] || ''}}
-          DEPLOY_VERIFIER: ${{ inputs.network == 'flare' && 'sourcify' || inputs.network == 'songbird' && 'blockscout' || 'etherscan' }}
-          DEPLOY_VERIFIER_URL: ${{ inputs.network == 'songbird' && 'https://songbird-explorer.flare.network/api' || inputs.network == 'flare' && 'https://api.routescan.io/v2/network/mainnet/evm/14/etherscan' || '' }}
+          DEPLOY_BROADCAST: '1'
+          DEPLOYMENT_KEY: ${{ github.ref == 'refs/heads/main' && secrets.PRIVATE_KEY || secrets.PRIVATE_KEY_DEV }}
+          ETH_RPC_URL: ${{ secrets[env.rpc_secret_name] || vars[env.rpc_secret_name] || '' }}
+          ETHERSCAN_API_KEY: ${{ secrets[env.etherscan_api_key_secret_name] || vars[env.etherscan_api_key_secret_name] || ''}}
+          DEPLOY_VERIFY: ${{ secrets[env.verify_secret_name] || vars[env.verify_secret_name] || '' }}
+          DEPLOY_VERIFIER: ${{ secrets[env.verifier_secret_name] || vars[env.verifier_secret_name] || '' }}
+          DEPLOY_VERIFIER_URL: ${{ secrets[env.verifier_url_secret_name] || vars[env.verifier_url_secret_name] || '' }}
+          DEPLOY_METABOARD_ADDRESS: ${{ secrets[env.metaboard_address_secret_name] || vars[env.metaboard_address_secret_name] || '' }}
