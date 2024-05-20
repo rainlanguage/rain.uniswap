@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {BaseRainterpreterSubParserNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
 import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibSubParse.sol";
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
-import {AuthoringMetaV2} from "rain.interpreter/interface/IParserV1.sol";
+import {AuthoringMetaV2} from "rain.interpreter.interface/interface/IParserV1.sol";
 import {
     OPCODE_UNISWAP_V2_AMOUNT_IN,
     OPCODE_UNISWAP_V2_AMOUNT_OUT,
@@ -15,19 +15,21 @@ import {
     OPCODE_UNISWAP_V3_TWAP
 } from "./UniswapExtern.sol";
 
+bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0xfb28ecc3fe4ddc0c40fd307c10c1bce50db8017c53130340071e3093ca79aebc);
+
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
 bytes constant SUB_PARSER_PARSE_META =
     hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
 
 /// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0cdf0d010d140d270d3a0d4d";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0d180d3a0d4d0d600d730d86";
 
 /// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"16641664166416f916f916f9";
+bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"1d521d521d521db71db71db7";
 
 /// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"165b";
+bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1d49";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -44,36 +46,38 @@ uint256 constant SUB_PARSER_WORD_UNISWAP_V3_TWAP = 5;
 /// @dev The number of function pointers in the array.
 uint256 constant SUB_PARSER_WORD_PARSERS_LENGTH = 6;
 
-/// Builds the authoring meta for the sub parser. This is used both as data for
-/// tooling directly, and to build the runtime parse meta.
-//slither-disable-next-line dead-code
-function authoringMetaV2() pure returns (bytes memory) {
-    AuthoringMetaV2[] memory meta = new AuthoringMetaV2[](SUB_PARSER_WORD_PARSERS_LENGTH);
-    meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = AuthoringMetaV2(
-        "uniswap-v2-quote-exact-output",
-        "Quotes the minimum absolute amount of input tokens required to get a given amount of output tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well."
-    );
-    meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = AuthoringMetaV2(
-        "uniswap-v2-quote-exact-input",
-        "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. If the operand is 1 the last time the prices changed will be returned as well."
-    );
-    meta[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = AuthoringMetaV2(
-        "uniswap-v2-spot-output-ratio",
-        "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals. If the operand is 1 the last time the ratio changed will be returned as well."
-    );
-    meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
-        "uniswap-v3-quote-exact-output",
-        "Quotes the minimum absolute amount of input tokens required to get a given exact amount of output tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee."
-    );
-    meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
-        "uniswap-v3-quote-exact-input",
-        "Quotes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee."
-    );
-    meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
-        "uniswap-v3-twap-output-ratio",
-        "The time weighted average output ratio (output per unit of input) of a given token pair over a given period of time, as an 18 decimal fixed point ratio. Input/output token directions are from the perspective of the Uniswap pool contract. The first and second inputs are the input token address and decimals, the third and fourth are the output token address and decimals, the fifth and sixth are the start and end times ago in seconds, and the seventh is the pool fee. If the start and end times are both 0, returns the current instantaneous \"spot\" ratio rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%."
-    );
-    return abi.encode(meta);
+library LibUniswapSubParser {
+    /// Builds the authoring meta for the sub parser. This is used both as data for
+    /// tooling directly, and to build the runtime parse meta.
+    //slither-disable-next-line dead-code
+    function authoringMetaV2() internal pure returns (bytes memory) {
+        AuthoringMetaV2[] memory meta = new AuthoringMetaV2[](SUB_PARSER_WORD_PARSERS_LENGTH);
+        meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = AuthoringMetaV2(
+            "uniswap-v2-quote-exact-output",
+            "Quotes the minimum absolute amount of input tokens required to get a given amount of output tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = AuthoringMetaV2(
+            "uniswap-v2-quote-exact-input",
+            "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        meta[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = AuthoringMetaV2(
+            "uniswap-v2-spot-output-ratio",
+            "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address. If the operand is 1 the last time the ratio changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
+            "uniswap-v3-quote-exact-output",
+            "Quotes the minimum absolute amount of input tokens required to get a given exact amount of output tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact output amount, and the fourth is the pool fee. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_INPUT] = AuthoringMetaV2(
+            "uniswap-v3-quote-exact-input",
+            "Quotes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V3 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third is the exact input amount, and the fourth is the pool fee. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
+            "uniswap-v3-twap-output-ratio",
+            "The time weighted average output ratio (output per unit of input) of a given token pair over a given period of time. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third and fourth are the start and end times ago in seconds, and the fifth is the pool fee. If the start and end times are both 0, returns the current instantaneous \"spot\" ratio rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+        );
+        return abi.encode(meta);
+    }
 }
 
 uint256 constant SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX = 0;
@@ -115,6 +119,10 @@ uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
 /// the words and operands that are used by the UniswapWords. Provides the
 /// sugar required to make the externs work like native rain words.
 abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
+    function describedByMetaV1() external pure returns (bytes32) {
+        return DESCRIBED_BY_META_V1;
+    }
+
     /// Allows the UniswapWords contract to feed the extern address (itself)
     /// into the sub parser functions by overriding `extern`.
     function extern() internal view virtual returns (address);

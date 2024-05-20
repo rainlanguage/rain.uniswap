@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
@@ -16,10 +16,6 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
         vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
     }
 
-    function constructionMetaPath() internal pure override returns (string memory) {
-        return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
-    }
-
     function testUniswapWordsUniswapV3ExactInputHappyFork() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
@@ -30,10 +26,10 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
         // output
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount out 1e8 wbtc weth ~18.3 as 18 decimals (eth)
-        expectedStack[1] = 18345332574258529748;
-        // amount out 1 weth wbtc ~0.054 btc as 8 decimals (btc)
-        expectedStack[0] = 5444667;
+        // amount out 1 wbtc in ~18.3 weth out
+        expectedStack[1] = 18.345332574258529748e18;
+        // amount out 1 weth in ~0.054 wbtc out
+        expectedStack[0] = 0.05444667e18;
 
         checkHappy(
             bytes(
@@ -44,8 +40,8 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     // 1e8 is 1 btc because of the decimals.
-                    "max-amount-out-1e8-btc-weth: uniswap-v3-quote-exact-input(wbtc weth 1e8 [uniswap-v3-fee-low]),",
-                    "max-amount-out-1e18-weth-btc: uniswap-v3-quote-exact-input(weth wbtc 1e18 [uniswap-v3-fee-low]);"
+                    "max-amount-out-1e-10-btc-weth: uniswap-v3-quote-exact-input(wbtc weth 1 [uniswap-v3-fee-low]),",
+                    "max-amount-out-1-weth-btc: uniswap-v3-quote-exact-input(weth wbtc 1 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
@@ -124,7 +120,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-input(wbtc weth 1e8);"
+                    "_: uniswap-v3-quote-exact-input(wbtc weth 1);"
                 )
             ),
             5,
@@ -144,7 +140,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-input(wbtc weth 1e8 [uniswap-v3-fee-low] 1e18);"
+                    "_: uniswap-v3-quote-exact-input(wbtc weth 1 [uniswap-v3-fee-low] 1);"
                 )
             ),
             7,
@@ -164,7 +160,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v3-quote-exact-input(wbtc weth 1e8 [uniswap-v3-fee-low]);"
+                    ": uniswap-v3-quote-exact-input(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,
@@ -184,7 +180,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v3-quote-exact-input(wbtc weth 1e8 [uniswap-v3-fee-low]);"
+                    "_ _: uniswap-v3-quote-exact-input(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,

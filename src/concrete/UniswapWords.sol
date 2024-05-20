@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {
     UniswapExtern,
@@ -16,7 +16,7 @@ import {
     SUB_PARSER_LITERAL_PARSERS,
     BaseRainterpreterSubParserNPE2,
     AuthoringMetaV2,
-    authoringMetaV2
+    LibUniswapSubParser
 } from "../abstract/UniswapSubParser.sol";
 
 /// @title UniswapWords

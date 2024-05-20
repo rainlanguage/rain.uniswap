@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
@@ -16,10 +16,6 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
     }
 
-    function constructionMetaPath() internal pure override returns (string memory) {
-        return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
-    }
-
     function testUniswapWordsUniswapV2AmountInHappyFork() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
@@ -30,11 +26,10 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         // output
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount in
-        // wbtc has 8 decimals and weth has 18 so the amount in looks very small.
-        expectedStack[1] = 5460125;
+        // min amount in
+        expectedStack[1] = 0.05460125e18;
         // timestamp
-        expectedStack[0] = 1706347127;
+        expectedStack[0] = 1706347127e18;
 
         checkHappy(
             bytes(
@@ -44,11 +39,43 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1e18);"
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
                 )
             ),
             expectedStack,
             "uniswap-v2-quote-exact-output wbtc weth"
+        );
+    }
+
+    // Test a fork in the reverse direction, from weth to wbtc.
+    function testUniswapWordsUniswapV2AmountInHappyForkReverse() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        uint256[] memory expectedStack = new uint256[](4);
+        // input
+        // weth
+        expectedStack[3] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        // output
+        // wbtc
+        expectedStack[2] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        // min amount in
+        expectedStack[1] = 18.609605233934396799e18;
+        // timestamp
+        expectedStack[0] = 1706347127e18;
+
+        checkHappy(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(weth wbtc 1);"
+                )
+            ),
+            expectedStack,
+            "uniswap-v2-quote-exact-output weth wbtc"
         );
     }
 
@@ -123,7 +150,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1e18 0);"
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1 0);"
                 )
             ),
             6,
@@ -143,7 +170,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-output<1>(wbtc weth 1e18);"
+                    ": uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
                 )
             ),
             5,
@@ -163,7 +190,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-quote-exact-output<1>(wbtc weth 1e18);"
+                    "_: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
                 )
             ),
             5,
@@ -183,7 +210,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _ _: uniswap-v2-quote-exact-output<1>(wbtc weth 1e18);"
+                    "_ _ _: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
                 )
             ),
             5,
@@ -263,7 +290,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in: uniswap-v2-quote-exact-output(wbtc weth 1e18 0);"
+                    "min-amount-in: uniswap-v2-quote-exact-output(wbtc weth 1 0);"
                 )
             ),
             6,
@@ -283,7 +310,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-output(wbtc weth 1e18);"
+                    ": uniswap-v2-quote-exact-output(wbtc weth 1);"
                 )
             ),
             5,
@@ -303,7 +330,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-quote-exact-output(wbtc weth 1e18);"
+                    "_ _: uniswap-v2-quote-exact-output(wbtc weth 1);"
                 )
             ),
             5,

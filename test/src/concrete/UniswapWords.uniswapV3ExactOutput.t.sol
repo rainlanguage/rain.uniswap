@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
@@ -16,10 +16,6 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
         vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
     }
 
-    function constructionMetaPath() internal pure override returns (string memory) {
-        return string.concat("lib/rain.interpreter/", EXPRESSION_DEPLOYER_NP_META_PATH);
-    }
-
     function testUniswapWordsUniswapV3ExactOutputHappyFork() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
@@ -30,10 +26,10 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
         // output
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
-        // amount out 1e18 wbtc weth ~0.054 btc as 8 decimals (btc)
-        expectedStack[1] = 5450206;
-        // amount out 1e8 weth wbtc ~18.3 as 18 decimals (eth)
-        expectedStack[0] = 18369201836320617322;
+        // amount in 1 weth out ~0.054 btc in (btc)
+        expectedStack[1] = 0.05450206e18;
+        // amount in 1 wbtc out ~18.3 weth in (eth)
+        expectedStack[0] = 18.369201836320617322e18;
 
         checkHappy(
             bytes(
@@ -43,8 +39,8 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]),"
-                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1e8 [uniswap-v3-fee-low]);"
+                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]),"
+                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1 [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
@@ -123,7 +119,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18);"
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1);"
                 )
             ),
             5,
@@ -143,7 +139,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v3-quote-exact-output(wbtc weth 1e18 0xdeadbeef 1e18);"
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1 0xdeadbeef 1);"
                 )
             ),
             7,
@@ -163,7 +159,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                    ": uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,
@@ -183,7 +179,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1e18 [uniswap-v3-fee-low]);"
+                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
                 )
             ),
             6,

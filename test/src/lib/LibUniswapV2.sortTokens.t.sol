@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {LibUniswapV2ReferenceTest} from "test/abstract/LibUniswapV2ReferenceTest.sol";
 import {LibUniswapV2} from "src/lib/LibUniswapV2.sol";

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {stdError} from "forge-std/Test.sol";
 import {LibUniswapV2ReferenceTest} from "test/abstract/LibUniswapV2ReferenceTest.sol";
@@ -94,11 +94,10 @@ contract LibUniswapV2GetAmountInTest is LibUniswapV2ReferenceTest {
     /// If the numerator second mul overflows then both implementations will
     /// revert.
     function testGetAmountInOverflow1(uint256 amountOut, uint256 reserveIn, uint256 reserveOut) external {
-        amountOut = bound(amountOut, 1, type(uint256).max);
         reserveIn = bound(reserveIn, 1, type(uint256).max);
+        amountOut = bound(amountOut, type(uint256).max / reserveIn / 1000 + 1, type(uint256).max / reserveIn);
+
         reserveOut = bound(reserveOut, 1, type(uint256).max);
-        vm.assume(!LibWillOverflow.mulWillOverflow(reserveIn, amountOut));
-        vm.assume(LibWillOverflow.mulWillOverflow(reserveIn * amountOut, 1000));
 
         vm.expectRevert("ds-math-mul-overflow");
         iReferenceLib.getAmountIn(amountOut, reserveIn, reserveOut);

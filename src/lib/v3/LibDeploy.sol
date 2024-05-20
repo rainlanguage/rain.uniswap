@@ -10,9 +10,9 @@ address constant UNISWAP_V3_FACTORY = 0x1F98431c8aD98523631AE4a59f267346ea31F984
 library LibDeploy {
     function newQuoter(Vm vm) internal returns (address) {
         // https://book.getfoundry.sh/cheatcodes/get-code#examples
-        bytes memory code = abi.encodePacked(
-            vm.getCode("quoter/Quoter.sol:Quoter"), abi.encode(vm.envOr("UNI_V3_FACTORY", UNISWAP_V3_FACTORY))
-        );
+        string memory getCodePath = "out/quoter/Quoter.sol:Quoter";
+        bytes memory code =
+            abi.encodePacked(vm.getCode(getCodePath), abi.encode(vm.envOr("UNI_V3_FACTORY", UNISWAP_V3_FACTORY)));
         address quoter;
         assembly ("memory-safe") {
             quoter := create(0, add(code, 0x20), mload(code))

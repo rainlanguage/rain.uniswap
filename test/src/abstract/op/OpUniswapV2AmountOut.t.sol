@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
-import {Operand} from "rain.interpreter/interface/unstable/IInterpreterV2.sol";
+import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {OpUniswapV2AmountOut} from "src/abstract/op/OpUniswapV2AmountOut.sol";
 
 contract OpUniswapV2AmountOutTest is Test, OpUniswapV2AmountOut {

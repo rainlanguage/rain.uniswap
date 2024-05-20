@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {
@@ -12,7 +12,7 @@ import {
     SUB_PARSER_PARSE_META,
     SUB_PARSER_LITERAL_PARSERS,
     AuthoringMetaV2,
-    authoringMetaV2
+    LibUniswapSubParser
 } from "src/concrete/UniswapWords.sol";
 import {LibParseMeta} from "rain.interpreter/lib/parse/LibParseMeta.sol";
 import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
@@ -44,7 +44,7 @@ contract UniswapWordsPointersTest is Test {
     }
 
     function testSubParserParseMeta() external {
-        bytes memory authoringMetaBytes = authoringMetaV2();
+        bytes memory authoringMetaBytes = LibUniswapSubParser.authoringMetaV2();
         AuthoringMetaV2[] memory authoringMeta = abi.decode(authoringMetaBytes, (AuthoringMetaV2[]));
         bytes memory expected = LibParseMeta.buildParseMetaV2(authoringMeta, 2);
         assertEq(SUB_PARSER_PARSE_META, expected);

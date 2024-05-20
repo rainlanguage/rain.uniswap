@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CAL
-pragma solidity =0.8.19;
+pragma solidity =0.8.25;
 
 import {BaseRainterpreterExternNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterExternNPE2.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
@@ -12,9 +12,9 @@ import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 
 /// @dev Runtime constant form of the pointers to the integrity functions.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"173e173e174e175e175e176a";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"1dfc1dfc1e0c1e1c1e1c1e28";
 /// @dev Runtime constant form of the pointers to the opcode functions.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0df10e640eab1018113311f2";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0e2a0fd81116137a15d517e1";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant OPCODE_UNISWAP_V2_AMOUNT_IN = 0;
