@@ -15,7 +15,7 @@ import {
     LibUniswapSubParser
 } from "src/concrete/UniswapWords.sol";
 import {LibParseMeta} from "rain.interpreter/lib/parse/LibParseMeta.sol";
-import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
+import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 
 contract UniswapWordsPointersTest is Test {
     function testIntegrityPointers() external {

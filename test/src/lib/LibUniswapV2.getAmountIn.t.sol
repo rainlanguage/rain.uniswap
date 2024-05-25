@@ -4,7 +4,7 @@ pragma solidity =0.8.25;
 import {stdError} from "forge-std/Test.sol";
 import {LibUniswapV2ReferenceTest} from "test/abstract/LibUniswapV2ReferenceTest.sol";
 import {LibWillOverflow} from "rain.will-overflow/src/lib/LibWillOverflow.sol";
-import {LibUniswapV2} from "src/lib/LibUniswapV2.sol";
+import {LibUniswapV2} from "src/lib/v2/LibUniswapV2.sol";
 import {UniswapV2ZeroOutputAmount, UniswapV2ZeroLiquidity} from "src/error/ErrUniswapV2.sol";
 
 contract LibUniswapV2GetAmountInTest is LibUniswapV2ReferenceTest {

@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import {IUniswapV2Pair} from "../interface/IUniswapV2Pair.sol";
-import {IUniswapV2Factory} from "../interface/IUniswapV2Factory.sol";
+import {IUniswapV2Pair} from "../../interface/IUniswapV2Pair.sol";
+import {IUniswapV2Factory} from "../../interface/IUniswapV2Factory.sol";
 import {
     UniswapV2ZeroAmount,
     UniswapV2ZeroOutputAmount,
@@ -10,7 +10,7 @@ import {
     UniswapV2ZeroAddress,
     UniswapV2ZeroLiquidity,
     UniswapV2ZeroInputAmount
-} from "../error/ErrUniswapV2.sol";
+} from "../../error/ErrUniswapV2.sol";
 
 /// UniswapV2Library from uniswap/v2-periphery is compiled with a version of
 /// SafeMath that is locked to Solidity 0.6.x which means we can't use it in
