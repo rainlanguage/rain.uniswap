@@ -12,7 +12,7 @@ contract RainterpreterExpressionDeployerNPE2DescribedByMetaV1Test is Test {
     }
 
     function testRainterpreterExpressionDeployerNPE2DescribedByMetaV1Happy() external {
-        bytes memory describedByMeta = vm.readFileBinary("meta/UniswapWordsDescribedByMetaV1.rain.meta");
+        bytes memory describedByMeta = vm.readFileBinary("meta/UniswapWords.rain.meta");
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
         assertEq(keccak256(describedByMeta), uniswapWords.describedByMetaV1());
