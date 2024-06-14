@@ -8,10 +8,11 @@ import {LibCodeGen} from "rain.sol.codegen/lib/LibCodeGen.sol";
 import {LibFs} from "rain.sol.codegen/lib/LibFs.sol";
 import {LibUniswapSubParser, PARSE_META_BUILD_DEPTH} from "../src/abstract/UniswapSubParser.sol";
 import {UniswapExternConfig} from "../src/abstract/UniswapExtern.sol";
+import {LibDeploy} from "../src/lib/v3/LibDeploy.sol";
 
 contract BuildPointers is Script {
     function buildUniswapWordsPointers() internal {
-        UniswapWords words = new UniswapWords(UniswapExternConfig({v2Factory: address(0), v3Quoter: address(0)}));
+        UniswapWords words = LibDeploy.newUniswapWords(vm);
 
         string memory name = "UniswapWords";
 
@@ -25,7 +26,8 @@ contract BuildPointers is Script {
                 LibCodeGen.subParserWordParsersConstantString(vm, words),
                 LibCodeGen.operandHandlerFunctionPointersConstantString(vm, words),
                 LibCodeGen.integrityFunctionPointersConstantString(vm, words),
-                LibCodeGen.opcodeFunctionPointersConstantString(vm, words)
+                LibCodeGen.opcodeFunctionPointersConstantString(vm, words),
+                LibCodeGen.literalParserFunctionPointersConstantString(vm, words)
             )
         );
     }

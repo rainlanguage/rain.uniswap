@@ -18,24 +18,15 @@ import {
     OPCODE_UNISWAP_V3_EXACT_INPUT,
     OPCODE_UNISWAP_V3_TWAP
 } from "./UniswapExtern.sol";
-
-bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0xfb28ecc3fe4ddc0c40fd307c10c1bce50db8017c53130340071e3093ca79aebc);
+import {
+    LITERAL_PARSER_FUNCTION_POINTERS as SUB_PARSER_LITERAL_PARSERS,
+    PARSE_META as SUB_PARSER_PARSE_META,
+    SUB_PARSER_WORD_PARSERS,
+    OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
+    DESCRIBED_BY_META_HASH
+} from "../generated/UniswapWords.pointers.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
-
-/// @dev Runtime constant form of the parse meta. Used to map stringy words into
-/// indexes in roughly O(1).
-bytes constant SUB_PARSER_PARSE_META =
-    hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
-
-/// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0d180d3a0d4d0d600d730d86";
-
-/// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"1d521d521d521db71db71db7";
-
-/// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1d49";
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -126,7 +117,7 @@ uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
 /// sugar required to make the externs work like native rain words.
 abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     function describedByMetaV1() external pure returns (bytes32) {
-        return DESCRIBED_BY_META_V1;
+        return DESCRIBED_BY_META_HASH;
     }
 
     /// Allows the UniswapWords contract to feed the extern address (itself)

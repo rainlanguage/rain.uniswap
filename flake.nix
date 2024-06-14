@@ -27,7 +27,7 @@
                 -t cbor \
                 -e deflate \
                 -l none \
-                -o meta/UniswapWordsDescribedByMetaV1.rain.meta \
+                -o meta/UniswapWords.rain.meta \
               ;
 
               FOUNDRY_PROFILE=reference forge build --force
