@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: CAL
 pragma solidity =0.8.25;
 
-import {BaseRainterpreterSubParserNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
+import {
+    BaseRainterpreterSubParserNPE2,
+    Operand,
+    IParserToolingV1
+} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
 import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibSubParse.sol";
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
@@ -14,22 +18,15 @@ import {
     OPCODE_UNISWAP_V3_EXACT_INPUT,
     OPCODE_UNISWAP_V3_TWAP
 } from "./UniswapExtern.sol";
+import {
+    LITERAL_PARSER_FUNCTION_POINTERS as SUB_PARSER_LITERAL_PARSERS,
+    PARSE_META as SUB_PARSER_PARSE_META,
+    SUB_PARSER_WORD_PARSERS,
+    OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
+    DESCRIBED_BY_META_HASH
+} from "../generated/UniswapWords.pointers.sol";
 
-bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0xfb28ecc3fe4ddc0c40fd307c10c1bce50db8017c53130340071e3093ca79aebc);
-
-/// @dev Runtime constant form of the parse meta. Used to map stringy words into
-/// indexes in roughly O(1).
-bytes constant SUB_PARSER_PARSE_META =
-    hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
-
-/// @dev Runtime constant form of the pointers to the word parsers.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0d180d3a0d4d0d600d730d86";
-
-/// @dev Runtime constant form of the pointers to the operand handlers.
-bytes constant SUB_PARSER_OPERAND_HANDLERS = hex"1d521d521d521db71db71db7";
-
-/// @dev Runtime constant form of the pointers to the literal parsers.
-bytes constant SUB_PARSER_LITERAL_PARSERS = hex"1d49";
+uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
 /// @dev Index into the function pointers array for the V2 amount in.
 uint256 constant SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN = 0;
@@ -120,7 +117,7 @@ uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
 /// sugar required to make the externs work like native rain words.
 abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     function describedByMetaV1() external pure returns (bytes32) {
-        return DESCRIBED_BY_META_V1;
+        return DESCRIBED_BY_META_HASH;
     }
 
     /// Allows the UniswapWords contract to feed the extern address (itself)
@@ -144,7 +141,8 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         return SUB_PARSER_LITERAL_PARSERS;
     }
 
-    function buildSubParserLiteralParsers() external pure returns (bytes memory) {
+    /// @inheritdoc IParserToolingV1
+    function buildLiteralParserFunctionPointers() external pure returns (bytes memory) {
         unchecked {
             function (uint256, uint256, uint256) internal pure returns (uint256)[] memory fs =
                 new function (uint256, uint256, uint256) internal pure returns (uint256)[](1);
@@ -207,7 +205,8 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     /// Create a 16-bit pointer array for the operand handlers. This is
     /// relatively gas inefficent so it is only called during tests to cross
     /// reference against the constant values that are used at runtime.
-    function buildSubParserOperandHandlers() external pure returns (bytes memory) {
+    /// @inheritdoc IParserToolingV1
+    function buildOperandHandlerFunctionPointers() external pure returns (bytes memory) {
         function(uint256[] memory) internal pure returns (Operand)[] memory fs =
             new function(uint256[] memory) internal pure returns (Operand)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = LibParseOperand.handleOperandSingleFull;
