@@ -1,7 +1,11 @@
 // SPDX-License-Identifier: CAL
 pragma solidity =0.8.25;
 
-import {BaseRainterpreterSubParserNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
+import {
+    BaseRainterpreterSubParserNPE2,
+    Operand,
+    IParserToolingV1
+} from "rain.interpreter/abstract/BaseRainterpreterSubParserNPE2.sol";
 import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibSubParse.sol";
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
@@ -16,6 +20,8 @@ import {
 } from "./UniswapExtern.sol";
 
 bytes32 constant DESCRIBED_BY_META_V1 = bytes32(0xfb28ecc3fe4ddc0c40fd307c10c1bce50db8017c53130340071e3093ca79aebc);
+
+uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
 /// @dev Runtime constant form of the parse meta. Used to map stringy words into
 /// indexes in roughly O(1).
@@ -144,7 +150,8 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         return SUB_PARSER_LITERAL_PARSERS;
     }
 
-    function buildSubParserLiteralParsers() external pure returns (bytes memory) {
+    /// @inheritdoc IParserToolingV1
+    function buildLiteralParserFunctionPointers() external pure returns (bytes memory) {
         unchecked {
             function (uint256, uint256, uint256) internal pure returns (uint256)[] memory fs =
                 new function (uint256, uint256, uint256) internal pure returns (uint256)[](1);
@@ -207,7 +214,8 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
     /// Create a 16-bit pointer array for the operand handlers. This is
     /// relatively gas inefficent so it is only called during tests to cross
     /// reference against the constant values that are used at runtime.
-    function buildSubParserOperandHandlers() external pure returns (bytes memory) {
+    /// @inheritdoc IParserToolingV1
+    function buildOperandHandlerFunctionPointers() external pure returns (bytes memory) {
         function(uint256[] memory) internal pure returns (Operand)[] memory fs =
             new function(uint256[] memory) internal pure returns (Operand)[](SUB_PARSER_WORD_PARSERS_LENGTH);
         fs[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = LibParseOperand.handleOperandSingleFull;
