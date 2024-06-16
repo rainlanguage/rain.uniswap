@@ -80,33 +80,25 @@ library LibUniswapSubParser {
 uint256 constant SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX = 0;
 
 /// @dev The literal string for the high fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_HIGH = "uniswap-v3-fee-high";
-uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH = 19;
-uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_HIGH = keccak256("uniswap-v3-fee-high");
 /// @dev The value that is returned when the high fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#high
 uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_VALUE = 10000;
 
 /// @dev The literal string for the medium fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_MEDIUM = "uniswap-v3-fee-medium";
-uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH = 21;
-uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_MEDIUM = keccak256("uniswap-v3-fee-medium");
 /// @dev The value that is returned when the medium fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#medium
 uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE = 3000;
 
 /// @dev The literal string for the low fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_LOW = "uniswap-v3-fee-low";
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_LENGTH = 18;
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOW_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_LOW = keccak256("uniswap-v3-fee-low");
 /// @dev The value that is returned when the low fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#low
 uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_VALUE = 500;
 
 /// @dev The literal string for the lowest fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_LOWEST = "uniswap-v3-fee-lowest";
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH = 21;
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_LOWEST = keccak256("uniswap-v3-fee-lowest");
 /// @dev The value that is returned when the lowest fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#lowest
 uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
@@ -164,28 +156,18 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         returns (bool, uint256, uint256)
     {
         uint256 loaded;
+        bytes32 dispatchHash;
         assembly ("memory-safe") {
             loaded := mload(cursor)
+            dispatchHash := keccak256(cursor, sub(end, cursor))
         }
-        if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_HIGH).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_HIGH_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_HIGH))
-        ) {
+        if (dispatchHash == LITERAL_UNISWAP_V3_FEE_HIGH) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_HIGH_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_MEDIUM).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_MEDIUM))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_MEDIUM) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOW).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_LOW_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOW))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_LOW) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOW_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOWEST).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_LOWEST_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOWEST))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_LOWEST) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE);
         } else {
             return (false, 0, 0);
