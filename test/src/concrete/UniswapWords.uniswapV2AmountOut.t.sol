@@ -37,7 +37,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(wbtc weth 1);"
+                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(wbtc weth 1 [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
@@ -69,7 +69,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(weth wbtc 1);"
+                    "max-amount-out timestamp: uniswap-v2-quote-exact-input<1>(weth wbtc 1 [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
@@ -92,7 +92,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             2,
-            3,
+            5,
             0
         );
     }
@@ -112,7 +112,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             3,
-            3,
+            5,
             1
         );
     }
@@ -132,7 +132,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             4,
-            3,
+            5,
             2
         );
     }
@@ -148,10 +148,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-input<1>(wbtc weth 1);"
+                    ": uniswap-v2-quote-exact-input<1>(wbtc weth 1 0 0);"
                 )
             ),
-            5,
+            7,
             2,
             0
         );
@@ -168,10 +168,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-quote-exact-input<1>(wbtc weth 1);"
+                    "_: uniswap-v2-quote-exact-input<1>(wbtc weth 1 0 0);"
                 )
             ),
-            5,
+            7,
             2,
             1
         );
@@ -192,7 +192,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             2,
-            3,
+            5,
             0
         );
     }
@@ -212,7 +212,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             3,
-            3,
+            5,
             1
         );
     }
@@ -232,7 +232,7 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                 )
             ),
             4,
-            3,
+            5,
             2
         );
     }
@@ -248,10 +248,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-input(wbtc weth 1);"
+                    ": uniswap-v2-quote-exact-input(wbtc weth 1 0 0);"
                 )
             ),
-            5,
+            7,
             1,
             0
         );
@@ -268,10 +268,10 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-quote-exact-input(wbtc weth 1);"
+                    "_ _: uniswap-v2-quote-exact-input(wbtc weth 1 0 0);"
                 )
             ),
-            5,
+            7,
             1,
             2
         );

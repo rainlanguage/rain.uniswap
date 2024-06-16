@@ -25,6 +25,7 @@ import {
     OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
     DESCRIBED_BY_META_HASH
 } from "../generated/UniswapWords.pointers.sol";
+import {UNISWAP_V2_INIT_CODE_HASH, UNISWAP_V2_FACTORY} from "../lib/v2/LibUniswapV2.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
@@ -103,6 +104,12 @@ bytes32 constant LITERAL_UNISWAP_V3_FEE_LOWEST = keccak256("uniswap-v3-fee-lowes
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#lowest
 uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
 
+/// @dev The uniswap v2 factory address.
+bytes32 constant LITERAL_UNISWAP_V2_FACTORY = keccak256("uniswap-v2-factory");
+
+/// @dev The uniswap v2 init code hash.
+bytes32 constant LITERAL_UNISWAP_V2_INIT_CODE = keccak256("uniswap-v2-init-code");
+
 /// @title UniswapSubParser
 /// Implements the sub parser half of UniswapWords. Responsible for parsing
 /// the words and operands that are used by the UniswapWords. Provides the
@@ -155,10 +162,8 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         override
         returns (bool, uint256, uint256)
     {
-        uint256 loaded;
         bytes32 dispatchHash;
         assembly ("memory-safe") {
-            loaded := mload(cursor)
             dispatchHash := keccak256(cursor, sub(end, cursor))
         }
         if (dispatchHash == LITERAL_UNISWAP_V3_FEE_HIGH) {
@@ -169,6 +174,10 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOW_VALUE);
         } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_LOWEST) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE);
+        } else if (dispatchHash == LITERAL_UNISWAP_V2_FACTORY) {
+            return (true, 0, uint256(uint160(UNISWAP_V2_FACTORY)));
+        } else if (dispatchHash == LITERAL_UNISWAP_V2_INIT_CODE) {
+            return (true, 0, uint256(UNISWAP_V2_INIT_CODE_HASH));
         } else {
             return (false, 0, 0);
         }

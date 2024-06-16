@@ -39,8 +39,8 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth),"
-                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth wbtc);"
+                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth [uniswap-v2-factory] [uniswap-v2-init-code]),"
+                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth wbtc [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
@@ -63,7 +63,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             2,
-            2,
+            4,
             0
         );
     }
@@ -83,7 +83,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             3,
-            2,
+            4,
             1
         );
     }
@@ -103,7 +103,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             5,
-            2,
+            4,
             3
         );
     }
@@ -119,10 +119,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio<1>(wbtc weth);"
+                    ": uniswap-v2-spot-output-ratio<1>(wbtc weth 0 0);"
                 )
             ),
-            4,
+            6,
             2,
             0
         );
@@ -139,10 +139,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-spot-output-ratio<1>(wbtc weth);"
+                    "_: uniswap-v2-spot-output-ratio<1>(wbtc weth 0 0);"
                 )
             ),
-            4,
+            6,
             2,
             1
         );
@@ -163,7 +163,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             2,
-            2,
+            4,
             0
         );
     }
@@ -183,7 +183,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             3,
-            2,
+            4,
             1
         );
     }
@@ -203,7 +203,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                 )
             ),
             5,
-            2,
+            4,
             3
         );
     }
@@ -219,10 +219,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio(wbtc weth);"
+                    ": uniswap-v2-spot-output-ratio(wbtc weth 0 0);"
                 )
             ),
-            4,
+            6,
             1,
             0
         );
@@ -239,10 +239,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-spot-output-ratio(wbtc weth);"
+                    "_ _: uniswap-v2-spot-output-ratio(wbtc weth 0 0);"
                 )
             ),
-            4,
+            6,
             1,
             2
         );

@@ -10,20 +10,18 @@ import {FIXED_POINT_ONE} from "rain.math.fixedpoint/lib/FixedPointDecimalConstan
 error UniswapV2TwapTokenDecimalsOverflow(address token, uint256 decimals);
 error UniswapV2TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
 
-/// @title OpUniswapV2Quote
+/// @title LibOpUniswapV2Quote
 /// @notice Opcode to calculate the quote for a Uniswap V2 pair.
-abstract contract OpUniswapV2Quote {
-    function v2Factory() internal view virtual returns (address);
-
+library LibOpUniswapV2Quote {
     /// Extern integrity for the process of calculating the quote for a Uniswap
-    /// V2 pair. Always requires 2 inputs and produces 1 or 2 outputs.
+    /// V2 pair. Always requires 4 inputs and produces 1 or 2 outputs.
     //slither-disable-next-line dead-code
     function integrityUniswapV2Quote(Operand operand, uint256, uint256) internal pure returns (uint256, uint256) {
         unchecked {
             // Outputs is 1 if we don't want the timestamp (operand 0) or 2 if we
             // do (operand 1).
             uint256 outputs = 1 + (Operand.unwrap(operand) & 1);
-            return (2, outputs);
+            return (4, outputs);
         }
     }
 
@@ -31,10 +29,14 @@ abstract contract OpUniswapV2Quote {
     function runUniswapV2Quote(Operand operand, uint256[] memory inputs) internal view returns (uint256[] memory) {
         uint256 tokenIn;
         uint256 tokenOut;
+        uint256 v2Factory;
+        uint256 initCodeHash;
         uint256 withTime;
         assembly ("memory-safe") {
             tokenIn := mload(add(inputs, 0x20))
             tokenOut := mload(add(inputs, 0x40))
+            v2Factory := mload(add(inputs, 0x60))
+            initCodeHash := mload(add(inputs, 0x80))
             withTime := and(operand, 1)
         }
         // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
@@ -49,8 +51,13 @@ abstract contract OpUniswapV2Quote {
         // up with precision loss when we rescale the output ratio below. By
         // asking for 1e36, we can rescale the output ratio to 18 decimals
         // then divide by 1e18 to get the correct amount out with full precision.
-        (uint256 amountOut, uint256 reserveTimestamp) =
-            LibUniswapV2.getQuoteWithTime(v2Factory(), address(uint160(tokenIn)), address(uint160(tokenOut)), 1e36);
+        (uint256 amountOut, uint256 reserveTimestamp) = LibUniswapV2.getQuoteWithTime(
+            address(uint160(v2Factory)),
+            bytes32(initCodeHash),
+            address(uint160(tokenIn)),
+            address(uint160(tokenOut)),
+            1e36
+        );
 
         // Scale the amountOut to 18 decimal fixed point ratio, according to each
         // token's decimals.
