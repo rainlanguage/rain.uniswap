@@ -14,8 +14,8 @@ import {
     AuthoringMetaV2,
     LibUniswapSubParser
 } from "src/concrete/UniswapWords.sol";
-import {LibParseMeta} from "rain.interpreter/lib/parse/LibParseMeta.sol";
 import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
+import {LibGenParseMeta} from "rain.sol.codegen/lib/LibGenParseMeta.sol";
 
 contract UniswapWordsPointersTest is Test {
     function testIntegrityPointers() external {
@@ -35,18 +35,18 @@ contract UniswapWordsPointersTest is Test {
 
     function testSubParserOperandHandlers() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-        assertEq(SUB_PARSER_OPERAND_HANDLERS, uniswapWords.buildSubParserOperandHandlers());
+        assertEq(SUB_PARSER_OPERAND_HANDLERS, uniswapWords.buildOperandHandlerFunctionPointers());
     }
 
     function testSubParserLiteralParsers() external {
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
-        assertEq(SUB_PARSER_LITERAL_PARSERS, uniswapWords.buildSubParserLiteralParsers());
+        assertEq(SUB_PARSER_LITERAL_PARSERS, uniswapWords.buildLiteralParserFunctionPointers());
     }
 
     function testSubParserParseMeta() external {
         bytes memory authoringMetaBytes = LibUniswapSubParser.authoringMetaV2();
         AuthoringMetaV2[] memory authoringMeta = abi.decode(authoringMetaBytes, (AuthoringMetaV2[]));
-        bytes memory expected = LibParseMeta.buildParseMetaV2(authoringMeta, 2);
+        bytes memory expected = LibGenParseMeta.buildParseMetaV2(authoringMeta, 2);
         assertEq(SUB_PARSER_PARSE_META, expected);
     }
 }

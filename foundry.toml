@@ -24,10 +24,9 @@ bytecode_hash = "none"
 cbor_metadata = false
 
 fs_permissions = [
+    { access = "read-write", path = "meta"},
+    { access = "read-write", path = "src/generated" },
     { access = "read", path = "./out" },
-    { access = "read", path = "lib/rain.interpreter/meta/RainterpreterExpressionDeployerNPE2.rain.meta" },
-    { access = "write", path = "meta/AuthoringMeta.rain.meta" },
-    { access = "read-write", path = "meta/UniswapWordsDescribedByMetaV1.rain.meta" },
 ]
 
 remappings = [

@@ -4,8 +4,6 @@ pragma solidity =0.8.25;
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
-import {EXPRESSION_DEPLOYER_NP_META_PATH} from
-    "rain.interpreter/../test/lib/constants/ExpressionDeployerNPConstants.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
 import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 
