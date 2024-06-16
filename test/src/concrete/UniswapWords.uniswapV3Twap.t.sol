@@ -5,7 +5,7 @@ import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
 import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
-import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
+import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 
 contract UniswapWordsUniswapV3TwapTest is OpTest {
     using Strings for address;

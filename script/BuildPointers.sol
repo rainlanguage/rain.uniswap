@@ -8,7 +8,7 @@ import {LibCodeGen} from "rain.sol.codegen/lib/LibCodeGen.sol";
 import {LibFs} from "rain.sol.codegen/lib/LibFs.sol";
 import {LibUniswapSubParser, PARSE_META_BUILD_DEPTH} from "../src/abstract/UniswapSubParser.sol";
 import {UniswapExternConfig} from "../src/abstract/UniswapExtern.sol";
-import {LibDeploy} from "../src/lib/v3/LibDeploy.sol";
+import {LibDeploy} from "../src/lib/deploy/LibDeploy.sol";
 
 contract BuildPointers is Script {
     function buildUniswapWordsPointers() internal {

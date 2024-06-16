@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CAL
 pragma solidity ^0.8.18;
 
-import {LibUniswapV2} from "../../lib/LibUniswapV2.sol";
+import {LibUniswapV2} from "../../lib/v2/LibUniswapV2.sol";
 import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {FIXED_POINT_ONE} from "rain.math.fixedpoint/lib/FixedPointDecimalConstants.sol";

@@ -14,7 +14,7 @@ import {
     AuthoringMetaV2,
     LibUniswapSubParser
 } from "src/concrete/UniswapWords.sol";
-import {LibDeploy} from "src/lib/v3/LibDeploy.sol";
+import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 import {LibGenParseMeta} from "rain.sol.codegen/lib/LibGenParseMeta.sol";
 
 contract UniswapWordsPointersTest is Test {
