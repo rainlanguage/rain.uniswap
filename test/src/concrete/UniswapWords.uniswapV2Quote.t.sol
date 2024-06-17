@@ -57,12 +57,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>();"
+                    "_ _: uniswap-v2-spot-output-ratio<1>();"
                 )
             ),
-            2,
+            0,
             4,
             0
         );
@@ -77,14 +75,30 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc);"
+                    "_ _: uniswap-v2-spot-output-ratio<1>(0);"
                 )
             ),
-            3,
+            1,
             4,
             1
+        );
+    }
+
+    function testUniswapWordsUniswapV2QuoteWithTimestampTwoInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0);"
+                )
+            ),
+            2,
+            4,
+            2
         );
     }
 
@@ -97,14 +111,30 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth 0xdeadbeef);"
+                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0 0xdeadbeef);"
+                )
+            ),
+            3,
+            4,
+            3
+        );
+    }
+
+    function testUniswapWordsUniswapV2QuoteWithTimestampFiveInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0 0 0 0);"
                 )
             ),
             5,
             4,
-            3
+            5
         );
     }
 
@@ -117,12 +147,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio<1>(wbtc weth 0 0);"
+                    ": uniswap-v2-spot-output-ratio<1>(0 0 0 0);"
                 )
             ),
-            6,
+            4,
             2,
             0
         );
@@ -137,12 +165,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-spot-output-ratio<1>(wbtc weth 0 0);"
+                    "_: uniswap-v2-spot-output-ratio<1>(0 0 0 0);"
                 )
             ),
-            6,
+            4,
             2,
             1
         );
@@ -154,15 +180,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         checkBadInputs(
             bytes(
                 string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio();"
+                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v2-spot-output-ratio();"
                 )
             ),
-            2,
+            0,
             4,
             0
         );
@@ -174,17 +195,30 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         checkBadInputs(
             bytes(
                 string.concat(
+                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v2-spot-output-ratio(0);"
+                )
+            ),
+            1,
+            4,
+            1
+        );
+    }
+
+    function testUniswapWordsUniswapV2QuoteWithoutTimestampTwoInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc);"
+                    "_: uniswap-v2-spot-output-ratio(0 0);"
                 )
             ),
-            3,
+            2,
             4,
-            1
+            2
         );
     }
 
@@ -197,14 +231,30 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth: uniswap-v2-spot-output-ratio(wbtc weth 0xdeadbeef);"
+                    "_: uniswap-v2-spot-output-ratio(0 0 0xdeadbeef);"
+                )
+            ),
+            3,
+            4,
+            3
+        );
+    }
+
+    function testUniswapWordsUniswapV2QuoteWithoutTimestampFiveInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v2-spot-output-ratio(0 0 0 0 0);"
                 )
             ),
             5,
             4,
-            3
+            5
         );
     }
 
@@ -217,12 +267,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-spot-output-ratio(wbtc weth 0 0);"
+                    ": uniswap-v2-spot-output-ratio(0 0 0 0);"
                 )
             ),
-            6,
+            4,
             1,
             0
         );
@@ -237,12 +285,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-spot-output-ratio(wbtc weth 0 0);"
+                    "_ _: uniswap-v2-spot-output-ratio(0 0 0 0);"
                 )
             ),
-            6,
+            4,
             1,
             2
         );
