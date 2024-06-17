@@ -12,7 +12,7 @@ import {
     UniswapV2ZeroInputAmount
 } from "../../error/ErrUniswapV2.sol";
 
-bytes32 constant UNISWAP_V2_INIT_CODE_HASH = hex"96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
+bytes32 constant UNISWAP_V2_INIT_CODE_HASH = 0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f;
 address constant UNISWAP_V2_FACTORY = 0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f;
 
 /// UniswapV2Library from uniswap/v2-periphery is compiled with a version of
