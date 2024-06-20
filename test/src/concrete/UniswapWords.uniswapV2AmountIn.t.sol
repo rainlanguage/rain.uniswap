@@ -37,7 +37,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1 [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
@@ -69,7 +69,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     " ",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(weth wbtc 1);"
+                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(weth wbtc 1 [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
@@ -86,13 +86,11 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>();"
+                    "_ _: uniswap-v2-quote-exact-output<1>();"
                 )
             ),
-            2,
-            3,
+            0,
+            5,
             0
         );
     }
@@ -106,13 +104,11 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc);"
+                    "_ _: uniswap-v2-quote-exact-output<1>(0);"
                 )
             ),
-            3,
-            3,
+            1,
+            5,
             1
         );
     }
@@ -126,14 +122,30 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth);"
+                    "_ _: uniswap-v2-quote-exact-output<1>(0 0);"
                 )
             ),
-            4,
-            3,
+            2,
+            5,
             2
+        );
+    }
+
+    function testUniswapWordsUniswapV2AmountInWithTimestampThreeInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v2-quote-exact-output<1>(0 0 0);"
+                )
+            ),
+            3,
+            5,
+            3
         );
     }
 
@@ -146,14 +158,30 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in timestamp: uniswap-v2-quote-exact-output<1>(wbtc weth 1 0);"
+                    "_ _: uniswap-v2-quote-exact-output<1>(0 0 1 0);"
+                )
+            ),
+            4,
+            5,
+            4
+        );
+    }
+
+    function testUniswapWordsUniswapV2AmountInWithTimestampSixInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v2-quote-exact-output<1>(0 0 1 0 0 0);"
                 )
             ),
             6,
-            3,
-            4
+            5,
+            6
         );
     }
 
@@ -166,9 +194,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
+                    ": uniswap-v2-quote-exact-output<1>(0 0 1 0 0);"
                 )
             ),
             5,
@@ -186,9 +212,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
+                    "_: uniswap-v2-quote-exact-output<1>(0 0 1 0 0);"
                 )
             ),
             5,
@@ -206,9 +230,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _ _: uniswap-v2-quote-exact-output<1>(wbtc weth 1);"
+                    "_ _ _: uniswap-v2-quote-exact-output<1>(0 0 1 0 0);"
                 )
             ),
             5,
@@ -223,16 +245,11 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
         checkBadInputs(
             bytes(
                 string.concat(
-                    "using-words-from ",
-                    address(uniswapWords).toHexString(),
-                    " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in: uniswap-v2-quote-exact-output();"
+                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v2-quote-exact-output();"
                 )
             ),
-            2,
-            3,
+            0,
+            5,
             0
         );
     }
@@ -246,13 +263,11 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in: uniswap-v2-quote-exact-output(wbtc);"
+                    "_: uniswap-v2-quote-exact-output(0);"
                 )
             ),
-            3,
-            3,
+            1,
+            5,
             1
         );
     }
@@ -266,14 +281,30 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in: uniswap-v2-quote-exact-output(wbtc weth);"
+                    "_: uniswap-v2-quote-exact-output(0 0);"
                 )
             ),
-            4,
-            3,
+            2,
+            5,
             2
+        );
+    }
+
+    function testUniswapWordsUniswapV2AmountInWithoutTimestampThreeInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v2-quote-exact-output(0 0 0);"
+                )
+            ),
+            3,
+            5,
+            3
         );
     }
 
@@ -286,14 +317,30 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in: uniswap-v2-quote-exact-output(wbtc weth 1 0);"
+                    "_: uniswap-v2-quote-exact-output(0 0 1 0);"
+                )
+            ),
+            4,
+            5,
+            4
+        );
+    }
+
+    function testUniswapWordsUniswapV2AmountInWithoutTimestampSixInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v2-quote-exact-output(0 0 1 0 0 0);"
                 )
             ),
             6,
-            3,
-            4
+            5,
+            6
         );
     }
 
@@ -306,9 +353,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v2-quote-exact-output(wbtc weth 1);"
+                    ": uniswap-v2-quote-exact-output(0 0 1 0 0);"
                 )
             ),
             5,
@@ -326,9 +371,7 @@ contract UniswapWordsUniswapV2AmountInTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v2-quote-exact-output(wbtc weth 1);"
+                    "_ _: uniswap-v2-quote-exact-output(0 0 1 0 0);"
                 )
             ),
             5,

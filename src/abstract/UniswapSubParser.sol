@@ -25,6 +25,7 @@ import {
     OPERAND_HANDLER_FUNCTION_POINTERS as SUB_PARSER_OPERAND_HANDLERS,
     DESCRIBED_BY_META_HASH
 } from "../generated/UniswapWords.pointers.sol";
+import {UNISWAP_V2_INIT_CODE_HASH, UNISWAP_V2_FACTORY} from "../lib/v2/LibUniswapV2.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
@@ -51,15 +52,15 @@ library LibUniswapSubParser {
         AuthoringMetaV2[] memory meta = new AuthoringMetaV2[](SUB_PARSER_WORD_PARSERS_LENGTH);
         meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_IN] = AuthoringMetaV2(
             "uniswap-v2-quote-exact-output",
-            "Quotes the minimum absolute amount of input tokens required to get a given amount of output tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+            "Quotes the minimum absolute amount of input tokens required to get a given amount of output tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of output tokens. The fourth and fifth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         meta[SUB_PARSER_WORD_UNISWAP_V2_AMOUNT_OUT] = AuthoringMetaV2(
             "uniswap-v2-quote-exact-input",
-            "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+            "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. The fourth and fifth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         meta[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = AuthoringMetaV2(
             "uniswap-v2-spot-output-ratio",
-            "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address. If the operand is 1 the last time the ratio changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+            "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address. The third and fourth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the ratio changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
             "uniswap-v3-quote-exact-output",
@@ -80,36 +81,34 @@ library LibUniswapSubParser {
 uint256 constant SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX = 0;
 
 /// @dev The literal string for the high fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_HIGH = "uniswap-v3-fee-high";
-uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH = 19;
-uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_HIGH_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_HIGH = keccak256("uniswap-v3-fee-high");
 /// @dev The value that is returned when the high fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#high
 uint256 constant LITERAL_UNISWAP_V3_FEE_HIGH_VALUE = 10000;
 
 /// @dev The literal string for the medium fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_MEDIUM = "uniswap-v3-fee-medium";
-uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH = 21;
-uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_MEDIUM_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_MEDIUM = keccak256("uniswap-v3-fee-medium");
 /// @dev The value that is returned when the medium fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#medium
 uint256 constant LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE = 3000;
 
 /// @dev The literal string for the low fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_LOW = "uniswap-v3-fee-low";
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_LENGTH = 18;
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOW_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_LOW = keccak256("uniswap-v3-fee-low");
 /// @dev The value that is returned when the low fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#low
 uint256 constant LITERAL_UNISWAP_V3_FEE_LOW_VALUE = 500;
 
 /// @dev The literal string for the lowest fee UniswapV3 pool.
-bytes constant LITERAL_UNISWAP_V3_FEE_LOWEST = "uniswap-v3-fee-lowest";
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH = 21;
-uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_MASK = ~((1 << ((0x20 - LITERAL_UNISWAP_V3_FEE_LOWEST_LENGTH) * 8)) - 1);
+bytes32 constant LITERAL_UNISWAP_V3_FEE_LOWEST = keccak256("uniswap-v3-fee-lowest");
 /// @dev The value that is returned when the lowest fee UniswapV3 pool is used.
 /// https://docs.uniswap.org/sdk/v3/reference/enums/FeeAmount#lowest
 uint256 constant LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE = 100;
+
+/// @dev The uniswap v2 factory address.
+bytes32 constant LITERAL_UNISWAP_V2_FACTORY = keccak256("uniswap-v2-factory");
+
+/// @dev The uniswap v2 init code hash.
+bytes32 constant LITERAL_UNISWAP_V2_INIT_CODE = keccak256("uniswap-v2-init-code");
 
 /// @title UniswapSubParser
 /// Implements the sub parser half of UniswapWords. Responsible for parsing
@@ -163,30 +162,22 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
         override
         returns (bool, uint256, uint256)
     {
-        uint256 loaded;
+        bytes32 dispatchHash;
         assembly ("memory-safe") {
-            loaded := mload(cursor)
+            dispatchHash := keccak256(cursor, sub(end, cursor))
         }
-        if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_HIGH).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_HIGH_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_HIGH))
-        ) {
+        if (dispatchHash == LITERAL_UNISWAP_V3_FEE_HIGH) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_HIGH_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_MEDIUM).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_MEDIUM_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_MEDIUM))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_MEDIUM) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_MEDIUM_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOW).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_LOW_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOW))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_LOW) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOW_VALUE);
-        } else if (
-            end - cursor == bytes(LITERAL_UNISWAP_V3_FEE_LOWEST).length
-                && loaded & LITERAL_UNISWAP_V3_FEE_LOWEST_MASK == uint256(bytes32(LITERAL_UNISWAP_V3_FEE_LOWEST))
-        ) {
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FEE_LOWEST) {
             return (true, SUB_PARSER_LITERAL_UNISWAP_V3_FEE_INDEX, LITERAL_UNISWAP_V3_FEE_LOWEST_VALUE);
+        } else if (dispatchHash == LITERAL_UNISWAP_V2_FACTORY) {
+            return (true, 0, uint256(uint160(UNISWAP_V2_FACTORY)));
+        } else if (dispatchHash == LITERAL_UNISWAP_V2_INIT_CODE) {
+            return (true, 0, uint256(UNISWAP_V2_INIT_CODE_HASH));
         } else {
             return (false, 0, 0);
         }

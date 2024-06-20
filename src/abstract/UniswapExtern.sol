@@ -3,9 +3,9 @@ pragma solidity =0.8.25;
 
 import {BaseRainterpreterExternNPE2, Operand} from "rain.interpreter/abstract/BaseRainterpreterExternNPE2.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
-import {OpUniswapV2AmountIn} from "./op/OpUniswapV2AmountIn.sol";
-import {OpUniswapV2AmountOut} from "./op/OpUniswapV2AmountOut.sol";
-import {OpUniswapV2Quote} from "./op/OpUniswapV2Quote.sol";
+import {LibOpUniswapV2AmountIn} from "../lib/op/LibOpUniswapV2AmountIn.sol";
+import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
+import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
 import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
 import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
@@ -36,32 +36,16 @@ struct UniswapExternConfig {
 /// Implements externs for Uniswap V2 and V3.
 abstract contract UniswapExtern is
     BaseRainterpreterExternNPE2,
-    OpUniswapV2AmountIn,
-    OpUniswapV2AmountOut,
-    OpUniswapV2Quote,
     OpUniswapV3ExactOutput,
     OpUniswapV3ExactInput,
     OpUniswapV3Twap
 {
-    address public immutable iV2Factory;
     address public immutable iV3Factory;
     IViewQuoterV3 public immutable iV3Quoter;
 
     constructor(UniswapExternConfig memory config) {
-        iV2Factory = config.v2Factory;
         iV3Quoter = IViewQuoterV3(config.v3Quoter);
         iV3Factory = iV3Quoter.factory();
-    }
-
-    /// @inheritdoc OpUniswapV2AmountIn
-    //slither-disable-next-line dead-code
-    function v2Factory()
-        internal
-        view
-        override(OpUniswapV2AmountIn, OpUniswapV2AmountOut, OpUniswapV2Quote)
-        returns (address)
-    {
-        return iV2Factory;
     }
 
     /// @inheritdoc OpUniswapV3Twap
@@ -93,9 +77,9 @@ abstract contract UniswapExtern is
         function(Operand, uint256[] memory) internal view returns (uint256[] memory)[] memory fs = new function(Operand, uint256[] memory) internal view returns (uint256[] memory)[](
             OPCODE_FUNCTION_POINTERS_LENGTH
         );
-        fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = OpUniswapV2AmountIn.runUniswapV2AmountIn;
-        fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = OpUniswapV2AmountOut.runUniswapV2AmountOut;
-        fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.runUniswapV2Quote;
+        fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = LibOpUniswapV2AmountIn.runUniswapV2AmountIn;
+        fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = LibOpUniswapV2AmountOut.runUniswapV2AmountOut;
+        fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.runUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.runUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.runUniswapV3ExactInput;
         fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.runUniswapV3Twap;
@@ -114,9 +98,9 @@ abstract contract UniswapExtern is
         function(Operand, uint256, uint256) internal pure returns (uint256, uint256)[] memory fs = new function(Operand, uint256, uint256) internal pure returns (uint256, uint256)[](
             OPCODE_FUNCTION_POINTERS_LENGTH
         );
-        fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = OpUniswapV2AmountIn.integrityUniswapV2AmountIn;
-        fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = OpUniswapV2AmountOut.integrityUniswapV2AmountOut;
-        fs[OPCODE_UNISWAP_V2_QUOTE] = OpUniswapV2Quote.integrityUniswapV2Quote;
+        fs[OPCODE_UNISWAP_V2_AMOUNT_IN] = LibOpUniswapV2AmountIn.integrityUniswapV2AmountIn;
+        fs[OPCODE_UNISWAP_V2_AMOUNT_OUT] = LibOpUniswapV2AmountOut.integrityUniswapV2AmountOut;
+        fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.integrityUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrityUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.integrityUniswapV3ExactInput;
         fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.integrityUniswapV3Twap;
