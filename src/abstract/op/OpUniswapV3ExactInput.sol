@@ -15,7 +15,7 @@ abstract contract OpUniswapV3ExactInput {
 
     //slither-disable-next-line dead-code
     function integrityUniswapV3ExactInput(Operand, uint256, uint256) internal pure returns (uint256, uint256) {
-        return (4, 1);
+        return (6, 1);
     }
 
     //slither-disable-next-line dead-code
