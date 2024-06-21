@@ -37,8 +37,8 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]),"
-                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1 [uniswap-v3-fee-low]);"
+                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),"
+                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
@@ -61,7 +61,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                 )
             ),
             2,
-            4,
+            6,
             0
         );
     }
@@ -81,7 +81,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                 )
             ),
             3,
-            4,
+            6,
             1
         );
     }
@@ -101,7 +101,7 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                 )
             ),
             4,
-            4,
+            6,
             2
         );
     }
@@ -121,8 +121,28 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                 )
             ),
             5,
-            4,
+            6,
             3
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputFourInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1 0xdeadbeef);"
+                )
+            ),
+            6,
+            6,
+            4
         );
     }
 
@@ -141,8 +161,28 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                 )
             ),
             7,
-            4,
+            6,
             5
+        );
+    }
+
+    function testUniswapWordsUniswapV3ExactOutputSevenInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
+                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
+                    "_: uniswap-v3-quote-exact-output(wbtc weth 1 0xdeadbeef 1 1 0);"
+                )
+            ),
+            9,
+            6,
+            7
         );
     }
 
@@ -157,10 +197,10 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    ": uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
+                    ": uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]);"
                 )
             ),
-            6,
+            8,
             1,
             0
         );
@@ -177,10 +217,10 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-fee-low]);"
+                    "_ _: uniswap-v3-quote-exact-output(wbtc weth 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]);"
                 )
             ),
-            6,
+            8,
             1,
             2
         );

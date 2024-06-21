@@ -50,14 +50,14 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "dai: 0x6B175474E89094C44Da98b954EedeAC495271d0F,",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "current-price-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 0 0 [uniswap-v3-fee-low]),",
-                    "last-second-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth mul(60 30) 0 [uniswap-v3-fee-low]),",
-                    "current-price-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 0 0 [uniswap-v3-fee-low]),",
-                    "last-second-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 2 1 [uniswap-v3-fee-low]),",
-                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc mul(60 30) 0 [uniswap-v3-fee-low]),",
-                    "weth-dai: uniswap-v3-twap-output-ratio(dai weth 1000 0 [uniswap-v3-fee-low]),"
-                    "dai-weth: uniswap-v3-twap-output-ratio(weth dai 1000 0 [uniswap-v3-fee-low]);"
+                    "current-price-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 0 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "last-second-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth 2 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "last-30-mins-btc-eth: uniswap-v3-twap-output-ratio(wbtc weth mul(60 30) 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "current-price-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 0 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "last-second-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc 2 1 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "last-30-mins-eth-btc: uniswap-v3-twap-output-ratio(weth wbtc mul(60 30) 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),",
+                    "weth-dai: uniswap-v3-twap-output-ratio(dai weth 1000 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]),"
+                    "dai-weth: uniswap-v3-twap-output-ratio(weth dai 1000 0 [uniswap-v3-factory] [uniswap-v3-init-code] [uniswap-v3-fee-low]);"
                 )
             ),
             expectedStack,
@@ -75,7 +75,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             0,
-            5,
+            7,
             0
         );
     }
@@ -90,7 +90,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             1,
-            5,
+            7,
             1
         );
     }
@@ -108,7 +108,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             2,
-            5,
+            7,
             2
         );
     }
@@ -126,7 +126,7 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             3,
-            5,
+            7,
             3
         );
     }
@@ -144,8 +144,26 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             4,
-            5,
+            7,
             4
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapFiveInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v3-twap-output-ratio(0 0 0 0 0);"
+                )
+            ),
+            5,
+            7,
+            5
         );
     }
 
@@ -162,8 +180,26 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                 )
             ),
             6,
-            5,
+            7,
             6
+        );
+    }
+
+    function testUniswapWordsUniswapV3TwapEightInputs() external {
+        UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
+
+        checkBadInputs(
+            bytes(
+                string.concat(
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0 0);"
+                )
+            ),
+            8,
+            7,
+            8
         );
     }
 
@@ -176,10 +212,10 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    ": uniswap-v3-twap-output-ratio(0 0 0 0 0);"
+                    ": uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
                 )
             ),
-            5,
+            7,
             1,
             0
         );
@@ -194,10 +230,10 @@ contract UniswapWordsUniswapV3TwapTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0);"
+                    "_ _: uniswap-v3-twap-output-ratio(0 0 0 0 0 0 0);"
                 )
             ),
-            5,
+            7,
             1,
             2
         );

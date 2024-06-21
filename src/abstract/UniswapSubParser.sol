@@ -26,6 +26,7 @@ import {
     DESCRIBED_BY_META_HASH
 } from "../generated/UniswapWords.pointers.sol";
 import {UNISWAP_V2_INIT_CODE_HASH, UNISWAP_V2_FACTORY} from "../lib/v2/LibUniswapV2.sol";
+import {UNISWAP_V3_INIT_CODE_HASH, UNISWAP_V3_FACTORY} from "../lib/v3/LibUniswapV3PoolAddress.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
@@ -110,6 +111,12 @@ bytes32 constant LITERAL_UNISWAP_V2_FACTORY = keccak256("uniswap-v2-factory");
 /// @dev The uniswap v2 init code hash.
 bytes32 constant LITERAL_UNISWAP_V2_INIT_CODE = keccak256("uniswap-v2-init-code");
 
+/// @dev The uniswap v3 factory address.
+bytes32 constant LITERAL_UNISWAP_V3_FACTORY = keccak256("uniswap-v3-factory");
+
+/// @dev The uniswap v3 init code hash.
+bytes32 constant LITERAL_UNISWAP_V3_INIT_CODE = keccak256("uniswap-v3-init-code");
+
 /// @title UniswapSubParser
 /// Implements the sub parser half of UniswapWords. Responsible for parsing
 /// the words and operands that are used by the UniswapWords. Provides the
@@ -178,6 +185,10 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             return (true, 0, uint256(uint160(UNISWAP_V2_FACTORY)));
         } else if (dispatchHash == LITERAL_UNISWAP_V2_INIT_CODE) {
             return (true, 0, uint256(UNISWAP_V2_INIT_CODE_HASH));
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_FACTORY) {
+            return (true, 0, uint256(uint160(UNISWAP_V3_FACTORY)));
+        } else if (dispatchHash == LITERAL_UNISWAP_V3_INIT_CODE) {
+            return (true, 0, uint256(UNISWAP_V3_INIT_CODE_HASH));
         } else {
             return (false, 0, 0);
         }
