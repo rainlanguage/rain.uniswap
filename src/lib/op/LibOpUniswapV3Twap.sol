@@ -14,15 +14,13 @@ error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo)
 error UniswapV3TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
 error UniswapV3TwapTokenDecimalsOverflow(address token, uint256 decimals);
 
-/// @title OpUniswapV3Twap
+/// @title LibOpUniswapV3Twap
 /// @notice Opcode to calculate the average ratio of a token pair over a period
 /// of time according to the uniswap v3 twap.
-abstract contract OpUniswapV3Twap {
-    function v3Factory() internal view virtual returns (address);
-
+library LibOpUniswapV3Twap {
     //slither-disable-next-line dead-code
     function integrityUniswapV3Twap(Operand, uint256, uint256) internal pure returns (uint256, uint256) {
-        return (5, 1);
+        return (7, 1);
     }
 
     //slither-disable-next-line dead-code
@@ -31,13 +29,17 @@ abstract contract OpUniswapV3Twap {
         uint256 tokenOut;
         uint256 startSecondsAgo;
         uint256 endSecondsAgo;
+        uint256 factory;
+        uint256 initCodeHash;
         uint256 fee;
         assembly ("memory-safe") {
             tokenIn := mload(add(inputs, 0x20))
             tokenOut := mload(add(inputs, 0x40))
             startSecondsAgo := mload(add(inputs, 0x60))
             endSecondsAgo := mload(add(inputs, 0x80))
-            fee := mload(add(inputs, 0xa0))
+            factory := mload(add(inputs, 0xa0))
+            initCodeHash := mload(add(inputs, 0xc0))
+            fee := mload(add(inputs, 0xe0))
         }
         // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
         uint256 tokenInDecimals = IERC20Metadata(address(uint160(tokenIn))).decimals();
@@ -52,7 +54,8 @@ abstract contract OpUniswapV3Twap {
 
         IUniswapV3Pool pool = IUniswapV3Pool(
             LibUniswapV3PoolAddress.computeAddress(
-                v3Factory(),
+                address(uint160(factory)),
+                bytes32(initCodeHash),
                 LibUniswapV3PoolAddress.getPoolKey(address(uint160(tokenIn)), address(uint160(tokenOut)), uint24(fee))
             )
         );

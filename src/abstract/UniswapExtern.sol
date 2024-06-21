@@ -8,7 +8,7 @@ import {LibOpUniswapV2AmountOut} from "../lib/op/LibOpUniswapV2AmountOut.sol";
 import {LibOpUniswapV2Quote} from "../lib/op/LibOpUniswapV2Quote.sol";
 import {OpUniswapV3ExactOutput} from "./op/OpUniswapV3ExactOutput.sol";
 import {OpUniswapV3ExactInput} from "./op/OpUniswapV3ExactInput.sol";
-import {OpUniswapV3Twap} from "./op/OpUniswapV3Twap.sol";
+import {LibOpUniswapV3Twap} from "../lib/op/LibOpUniswapV3Twap.sol";
 import {IViewQuoterV3} from "../interface/IViewQuoterV3.sol";
 import {INTEGRITY_FUNCTION_POINTERS, OPCODE_FUNCTION_POINTERS} from "../generated/UniswapWords.pointers.sol";
 
@@ -34,24 +34,11 @@ struct UniswapExternConfig {
 
 /// @title UniswapExtern
 /// Implements externs for Uniswap V2 and V3.
-abstract contract UniswapExtern is
-    BaseRainterpreterExternNPE2,
-    OpUniswapV3ExactOutput,
-    OpUniswapV3ExactInput,
-    OpUniswapV3Twap
-{
-    address public immutable iV3Factory;
+abstract contract UniswapExtern is BaseRainterpreterExternNPE2, OpUniswapV3ExactOutput, OpUniswapV3ExactInput {
     IViewQuoterV3 public immutable iV3Quoter;
 
     constructor(UniswapExternConfig memory config) {
         iV3Quoter = IViewQuoterV3(config.v3Quoter);
-        iV3Factory = iV3Quoter.factory();
-    }
-
-    /// @inheritdoc OpUniswapV3Twap
-    //slither-disable-next-line dead-code
-    function v3Factory() internal view override returns (address) {
-        return iV3Factory;
     }
 
     /// @inheritdoc OpUniswapV3ExactOutput
@@ -82,7 +69,7 @@ abstract contract UniswapExtern is
         fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.runUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.runUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.runUniswapV3ExactInput;
-        fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.runUniswapV3Twap;
+        fs[OPCODE_UNISWAP_V3_TWAP] = LibOpUniswapV3Twap.runUniswapV3Twap;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {
@@ -103,7 +90,7 @@ abstract contract UniswapExtern is
         fs[OPCODE_UNISWAP_V2_QUOTE] = LibOpUniswapV2Quote.integrityUniswapV2Quote;
         fs[OPCODE_UNISWAP_V3_EXACT_OUTPUT] = OpUniswapV3ExactOutput.integrityUniswapV3ExactOutput;
         fs[OPCODE_UNISWAP_V3_EXACT_INPUT] = OpUniswapV3ExactInput.integrityUniswapV3ExactInput;
-        fs[OPCODE_UNISWAP_V3_TWAP] = OpUniswapV3Twap.integrityUniswapV3Twap;
+        fs[OPCODE_UNISWAP_V3_TWAP] = LibOpUniswapV3Twap.integrityUniswapV3Twap;
 
         uint256[] memory pointers;
         assembly ("memory-safe") {

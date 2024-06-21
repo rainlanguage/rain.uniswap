@@ -5,6 +5,7 @@ import {Operand} from "rain.interpreter.interface/interface/IInterpreterV2.sol";
 import {IViewQuoterV3} from "../../interface/IViewQuoterV3.sol";
 import {LibFixedPointDecimalScale} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {LibUniswapV3PoolAddress} from "../../lib/v3/LibUniswapV3PoolAddress.sol";
 
 /// @title OpUniswapV3ExactInput
 /// @notice Opcode to calculate the amount in for an exact input from a Uniswap
@@ -23,30 +24,44 @@ abstract contract OpUniswapV3ExactInput {
         uint256 tokenOut;
         uint256 amountIn;
         uint256 fee;
-        assembly ("memory-safe") {
-            tokenIn := mload(add(inputs, 0x20))
-            tokenOut := mload(add(inputs, 0x40))
-            amountIn := mload(add(inputs, 0x60))
-            fee := mload(add(inputs, 0x80))
+        address pool;
+
+        {
+            uint256 factory;
+            uint256 initCodeHash;
+            assembly ("memory-safe") {
+                tokenIn := mload(add(inputs, 0x20))
+                tokenOut := mload(add(inputs, 0x40))
+                amountIn := mload(add(inputs, 0x60))
+                factory := mload(add(inputs, 0x80))
+                initCodeHash := mload(add(inputs, 0xa0))
+                fee := mload(add(inputs, 0xc0))
+            }
+            pool = LibUniswapV3PoolAddress.computeAddress(
+                address(uint160(factory)),
+                bytes32(initCodeHash),
+                LibUniswapV3PoolAddress.getPoolKey(address(uint160(tokenIn)), address(uint160(tokenOut)), uint24(fee))
+            );
         }
 
         // This can fail as `decimals` is an OPTIONAL part of the ERC20 standard.
         uint256 tokenInDecimals = IERC20Metadata(address(uint160(tokenIn))).decimals();
 
         (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate) = v3Quoter()
-            .quoteExactInputSingle(
-            IViewQuoterV3.QuoteExactInputSingleParams(
-                address(uint160(tokenIn)),
-                address(uint160(tokenOut)),
+            .quoteExactInputSingleWithPool(
+            IViewQuoterV3.QuoteExactInputSingleWithPoolParams({
+                tokenIn: address(uint160(tokenIn)),
+                tokenOut: address(uint160(tokenOut)),
                 // Default of erroring on overflow is safest as saturating will lose
                 // precision.
                 // Default rounding down.
-                LibFixedPointDecimalScale.scaleN(amountIn, tokenInDecimals, 0),
-                uint24(fee),
+                amountIn: LibFixedPointDecimalScale.scaleN(amountIn, tokenInDecimals, 0),
+                pool: pool,
+                fee: uint24(fee),
                 // This is the sqrtPriceLimitX96, which is 0 for no limit.
                 // It's not even used by the quoter contract internally.
-                0
-            )
+                sqrtPriceLimitX96: 0
+            })
         );
         (sqrtPriceX96After, initializedTicksCrossed, gasEstimate);
 

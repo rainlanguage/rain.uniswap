@@ -9,7 +9,7 @@
 pragma solidity =0.8.25;
 
 /// @dev Hash of the known bytecode.
-bytes32 constant BYTECODE_HASH = bytes32(0x3c2f86d843dfb1ec2cac510a87d8a33e1e19513f96f2387af07f15dde5785fc7);
+bytes32 constant BYTECODE_HASH = bytes32(0x665c3fff8d73769a62b863323c6841a0f1bbe5ba7ae97637d67a70793fea6514);
 
 /// @dev The hash of the meta that describes the contract.
 bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0x8b5104dd1fbe98ad3ad2842b81a2cef88d09b514802d01dadecf2a9ef8b7e1d9);
@@ -41,25 +41,25 @@ uint8 constant PARSE_META_BUILD_DEPTH = 1;
 /// bytecode that dials back into this contract at eval time, and mapping
 /// to things that happen entirely on the interpreter such as well known
 /// constants and references to the context grid.
-bytes constant SUB_PARSER_WORD_PARSERS = hex"0cee0d100d230d360d490d5c";
+bytes constant SUB_PARSER_WORD_PARSERS = hex"0cbc0cde0cf10d040d170d2a";
 
 /// @dev Every two bytes is a function pointer for an operand handler.
 /// These positional indexes all map to the same indexes looked up in the parse
 /// meta.
-bytes constant OPERAND_HANDLER_FUNCTION_POINTERS = hex"1f601f601f601fc51fc51fc5";
+bytes constant OPERAND_HANDLER_FUNCTION_POINTERS = hex"210621062106216b216b216b";
 
 /// @dev The function pointers for the integrity check fns.
-bytes constant INTEGRITY_FUNCTION_POINTERS = hex"1d731d731d831d931d931d9f";
+bytes constant INTEGRITY_FUNCTION_POINTERS = hex"1e751e751e851e951e951ea1";
 
 /// @dev The function pointers known to the interpreter for dynamic dispatch.
 /// By setting these as a constant they can be inlined into the interpreter
 /// and loaded at eval time for very low gas (~100) due to the compiler
 /// optimising it to a single `codecopy` to build the in memory bytes array.
-bytes constant OPCODE_FUNCTION_POINTERS = hex"0e000fa6114c13a415ff180b";
+bytes constant OPCODE_FUNCTION_POINTERS = hex"0dce0f74111a1372161d18f4";
 
 /// @dev Every two bytes is a function pointer for a literal parser.
 /// Literal dispatches are determined by the first byte(s) of the literal
 /// rather than a full word lookup, and are done with simple conditional
 /// jumps as the possibilities are limited compared to the number of words we
 /// have.
-bytes constant LITERAL_PARSER_FUNCTION_POINTERS = hex"1f57";
+bytes constant LITERAL_PARSER_FUNCTION_POINTERS = hex"20fd";
