@@ -3,12 +3,12 @@ pragma solidity =0.8.25;
 
 import {Test} from "forge-std/Test.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
-import {LibFork, BLOCK_NUMBER} from "test/lib/LibTestFork.sol";
+import {LibTestFork} from "test/lib/LibTestFork.sol";
 import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 
 contract RainterpreterExpressionDeployerNPE2DescribedByMetaV1Test is Test {
     constructor() {
-        vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
+        LibTestFork.forkEthereum(vm);
     }
 
     function testRainterpreterExpressionDeployerNPE2DescribedByMetaV1Happy() external {

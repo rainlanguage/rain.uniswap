@@ -4,14 +4,14 @@ pragma solidity =0.8.25;
 import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
-import {BLOCK_NUMBER, LibFork} from "../../lib/LibTestFork.sol";
+import {LibTestFork} from "../../lib/LibTestFork.sol";
 import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 
 contract UniswapWordsUniswapV3TwapTest is OpTest {
     using Strings for address;
 
     function beforeOpTestConstructor() internal override {
-        vm.createSelectFork(LibFork.rpcUrl(vm), BLOCK_NUMBER);
+        LibTestFork.forkEthereum(vm);
     }
 
     function testUniswapWordsUniswapV3TwapHappyFork() external {

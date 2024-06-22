@@ -2,6 +2,7 @@
 pragma solidity ^0.8.19;
 
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
+import {CHAIN_ID_ETHEREUM, CHAIN_ID_POLYGON} from "src/lib/chain/LibChainId.sol";
 
 uint256 constant BLOCK_NUMBER_ETHEREUM = 19097117;
 uint256 constant BLOCK_NUMBER_POLYGON = 58484437;
@@ -15,6 +16,7 @@ library LibTestFork {
 
     function forkEthereum(Vm vm) internal {
         vm.createSelectFork(rpcUrlEthereum(vm), BLOCK_NUMBER_ETHEREUM);
+        vm.chainId(CHAIN_ID_ETHEREUM);
     }
 
     function rpcUrlPolygon(Vm vm) internal view returns (string memory) {
@@ -22,6 +24,7 @@ library LibTestFork {
     }
 
     function forkPolygon(Vm vm) internal {
-        vm.createSelectFork(rpcUrlPolygon(vm), BLOCK_NUMBER_ETHEREUM);
+        vm.createSelectFork(rpcUrlPolygon(vm), BLOCK_NUMBER_POLYGON);
+        vm.chainId(CHAIN_ID_POLYGON);
     }
 }

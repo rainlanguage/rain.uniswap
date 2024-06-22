@@ -194,8 +194,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             return (true, 0, uint256(uint160(LibSushiV2.factoryAddress())));
         } else if (dispatchHash == LITERAL_SUSHISWAP_V2_INIT_CODE) {
             return (true, 0, uint256(LibSushiV2.initCodeHash()));
-        }
-        else {
+        } else {
             return (false, 0, 0);
         }
     }

@@ -6,12 +6,17 @@ import {OpTest} from "rain.interpreter/../test/abstract/OpTest.sol";
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {LibDeploy} from "src/lib/deploy/LibDeploy.sol";
 import {Strings} from "openzeppelin-contracts/contracts/utils/Strings.sol";
+import {CHAIN_ID_ETHEREUM, CHAIN_ID_POLYGON} from "src/lib/chain/LibChainId.sol";
 
-contract UniswapWordsSushiV2AmountInTest is OpTest {
+contract UniswapWordsSushiV2AmountInEthereumTest is OpTest {
     using Strings for address;
 
-    function testUniswapWordsUniswapV2AmountInHappyForkEthereum() external {
+    function beforeOpTestConstructor() internal override {
         LibTestFork.forkEthereum(vm);
+    }
+
+    function testUniswapWordsUniswapV2AmountInHappyFork() external {
+        vm.chainId(CHAIN_ID_ETHEREUM);
 
         UniswapWords uniswapWords = LibDeploy.newUniswapWords(vm);
 
@@ -23,9 +28,9 @@ contract UniswapWordsSushiV2AmountInTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // min amount in
-        expectedStack[1] = 0.05460125e18;
+        expectedStack[1] = 0.05457205e18;
         // timestamp
-        expectedStack[0] = 1706347127e18;
+        expectedStack[0] = 1706347955e18;
 
         checkHappy(
             bytes(
@@ -39,6 +44,7 @@ contract UniswapWordsSushiV2AmountInTest is OpTest {
                 )
             ),
             expectedStack,
-            "uniswap-v2-quote-exact-output wbtc weth"
+            "uniswap-v2-quote-exact-output wbtc weth sushi-v2"
         );
-    }}
+    }
+}
