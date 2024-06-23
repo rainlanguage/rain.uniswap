@@ -29,6 +29,7 @@ import {UNISWAP_V2_INIT_CODE_HASH, UNISWAP_V2_FACTORY} from "../lib/v2/LibUniswa
 import {UNISWAP_V3_INIT_CODE_HASH, UNISWAP_V3_FACTORY} from "../lib/v3/LibUniswapV3PoolAddress.sol";
 import {LibSushiV2, LITERAL_SUSHISWAP_V2_FACTORY, LITERAL_SUSHISWAP_V2_INIT_CODE} from "../lib/v2/LibSushiV2.sol";
 import {LibSushiV3, LITERAL_SUSHISWAP_V3_FACTORY, LITERAL_SUSHISWAP_V3_INIT_CODE} from "../lib/v3/LibSushiV3.sol";
+import {LibPancakeV2, LITERAL_PANCAKE_V2_FACTORY, LITERAL_PANCAKE_V2_INIT_CODE} from "../lib/v2/LibPancakeV2.sol";
 
 uint8 constant PARSE_META_BUILD_DEPTH = 1;
 
@@ -199,6 +200,10 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             return (true, 0, uint256(uint160(LibSushiV3.factoryAddress())));
         } else if (dispatchHash == LITERAL_SUSHISWAP_V3_INIT_CODE) {
             return (true, 0, uint256(LibSushiV3.initCodeHash()));
+        } else if (dispatchHash == LITERAL_PANCAKE_V2_FACTORY) {
+            return (true, 0, uint256(uint160(LibPancakeV2.factoryAddress())));
+        } else if (dispatchHash == LITERAL_PANCAKE_V2_INIT_CODE) {
+            return (true, 0, uint256(LibPancakeV2.initCodeHash()));
         } else {
             return (false, 0, 0);
         }
