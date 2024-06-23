@@ -59,11 +59,11 @@ remappings = [
 [profile.quoter]
 
 solc = "0.7.6"
-src = "lib/view-quoter-v3/contracts"
-test = "lib/view-quoter-v3/test"
-script = "lib/view-quoter-v3/script"
+src = "lib/view-quoter-v3.git/contracts"
+test = "lib/view-quoter-v3.git/test"
+script = "lib/view-quoter-v3.git/script"
 out = "out/quoter/"
-libs = ["lib/view-quoter-v3/lib"]
+libs = ["lib/view-quoter-v3.git/lib"]
 remappings = [
-    "v3-periphery/=lib/view-quoter-v3/lib/v3-periphery/",
+    "v3-periphery/=lib/view-quoter-v3.git/lib/v3-periphery/",
 ]
