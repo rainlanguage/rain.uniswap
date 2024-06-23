@@ -23,14 +23,14 @@ contract UniswapWordsPancakeV3AmountInEthereumTest is OpTest {
         uint256[] memory expectedStack = new uint256[](4);
         // input
         // wbtc
-        expectedStack[3] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
+        expectedStack[3] = uint256(uint160(0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48));
         // output
         // weth
-        expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
+        expectedStack[2] = uint256(uint160(0xdAC17F958D2ee523a2206206994597C13D831ec7));
         // amount in 1 weth out
-        expectedStack[1] = 0.05457205e18;
+        expectedStack[1] = 0.99955e18;
         // amount in 1 wbtc out
-        expectedStack[0] = 1706347955e18;
+        expectedStack[0] = 1.000652e18;
 
         checkHappy(
             bytes(

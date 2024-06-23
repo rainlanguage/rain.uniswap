@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import {UniswapWords, UniswapExternConfig} from "src/concrete/UniswapWords.sol";
 import {CHAIN_ID_ETHEREUM, CHAIN_ID_POLYGON, CHAIN_ID_BSC} from "src/lib/chain/LibChainId.sol";
 
-uint256 constant BLOCK_NUMBER_ETHEREUM = 19097117;
+uint256 constant BLOCK_NUMBER_ETHEREUM = 20153095;
 uint256 constant BLOCK_NUMBER_BSC = 39847120;
 uint256 constant BLOCK_NUMBER_POLYGON = 58484437;
 
