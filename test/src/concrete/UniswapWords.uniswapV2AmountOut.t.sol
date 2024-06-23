@@ -25,9 +25,9 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // max amount out
-        expectedStack[1] = 18.153612651961048307e18;
+        expectedStack[1] = 18.121332968504208195e18;
         // timestamp
-        expectedStack[0] = 1706347127e18;
+        expectedStack[0] = 1719126179e18;
 
         checkHappy(
             bytes(
@@ -57,9 +57,9 @@ contract UniswapWordsUniswapV2AmountOutTest is OpTest {
         // wbtc
         expectedStack[2] = uint256(uint160(0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599));
         // max amount out
-        expectedStack[1] = 0.05421864e18;
+        expectedStack[1] = 0.05431306e18;
         // timestamp
-        expectedStack[0] = 1706347127e18;
+        expectedStack[0] = 1719126179e18;
 
         checkHappy(
             bytes(

@@ -28,9 +28,9 @@ contract UniswapWordsSushiV2AmountInEthereumTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // min amount in
-        expectedStack[1] = 0.05457205e18;
+        expectedStack[1] = 0.0546837e18;
         // timestamp
-        expectedStack[0] = 1706347955e18;
+        expectedStack[0] = 1719129623e18;
 
         checkHappy(
             bytes(

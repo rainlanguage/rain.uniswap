@@ -204,9 +204,7 @@ abstract contract UniswapSubParser is BaseRainterpreterSubParserNPE2 {
             return (true, 0, uint256(uint160(LibPancakeV3.factoryAddress())));
         } else if (dispatchHash == LITERAL_PANCAKE_V3_INIT_CODE) {
             return (true, 0, uint256(LibPancakeV3.initCodeHash()));
-        }
-
-         else {
+        } else {
             return (false, 0, 0);
         }
     }

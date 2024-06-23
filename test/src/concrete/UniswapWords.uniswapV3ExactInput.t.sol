@@ -25,9 +25,9 @@ contract UniswapWordsUniswapV3ExactOutputTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // amount out 1 wbtc in ~18.3 weth out
-        expectedStack[1] = 18.345332574258529748e18;
+        expectedStack[1] = 18.332954714187830414e18;
         // amount out 1 weth in ~0.054 wbtc out
-        expectedStack[0] = 0.05444667e18;
+        expectedStack[0] = 0.05448548e18;
 
         checkHappy(
             bytes(

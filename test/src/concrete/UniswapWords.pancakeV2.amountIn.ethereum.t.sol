@@ -28,9 +28,9 @@ contract UniswapWordsPancakeV2AmountInEthereumTest is OpTest {
         // weth
         expectedStack[2] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // min amount in
-        expectedStack[1] = 0.0553303e18;
+        expectedStack[1] = 0.05536638e18;
         // timestamp
-        expectedStack[0] = 1706345735e18;
+        expectedStack[0] = 1719127439e18;
 
         checkHappy(
             bytes(
