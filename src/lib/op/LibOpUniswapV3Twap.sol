@@ -9,6 +9,7 @@ import {FixedPoint96} from "v3-core/contracts/libraries/FixedPoint96.sol";
 import {Math} from "openzeppelin-contracts/contracts/utils/math/Math.sol";
 import {LibFixedPointDecimalScale, DECIMAL_MAX_SAFE_INT} from "rain.math.fixedpoint/lib/LibFixedPointDecimalScale.sol";
 import {IERC20Metadata} from "openzeppelin-contracts/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {IUniswapV3PoolSlot0Unchecked} from "../../interface/IUniswapV3PoolSlot0Unchecked.sol";
 
 error UniswapV3TwapStartAfterEnd(uint256 startSecondsAgo, uint256 endSecondsAgo);
 error UniswapV3TwapTokenOrder(uint256 tokenIn, uint256 tokenOut);
@@ -65,7 +66,7 @@ library LibOpUniswapV3Twap {
         // Start 0 means current price.
         if (startSecondsAgo == 0) {
             //slither-disable-next-line unused-return
-            (sqrtPriceX96,,,,,,) = pool.slot0();
+            (sqrtPriceX96,,,,,,) = IUniswapV3PoolSlot0Unchecked(address(pool)).slot0();
         } else {
             uint32[] memory secondsAgos = new uint32[](2);
             secondsAgos[0] = uint32(startSecondsAgo);
