@@ -13,3 +13,6 @@
 [submodule "lib/view-quoter-v3"]
 	path = lib/view-quoter-v3
 	url = https://github.com/rainlanguage/view-quoter-v3
+[submodule "lib/view-quoter-v3.git"]
+	path = lib/view-quoter-v3.git
+	url = https://github.com/rainlanguage/view-quoter-v3.git
