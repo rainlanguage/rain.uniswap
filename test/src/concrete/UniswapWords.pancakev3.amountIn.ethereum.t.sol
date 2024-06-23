@@ -38,10 +38,10 @@ contract UniswapWordsPancakeV3AmountInEthereumTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
-                    "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(wbtc weth 1 [pancake-v3-factory] [pancake-v3-init-code] [uniswap-v3-fee-low]),",
-                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(weth wbtc 1 [pancake-v3-factory] [pancake-v3-init-code] [uniswap-v3-fee-low]);"
+                    "usdc: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48,",
+                    "usdt: 0xdAC17F958D2ee523a2206206994597C13D831ec7,",
+                    "min-amount-in-wbtc-weth: uniswap-v3-quote-exact-output(usdc usdt 1 [pancake-v3-factory] [pancake-v3-init-code] [uniswap-v3-fee-lowest]),",
+                    "min-amount-in-weth-wbtc: uniswap-v3-quote-exact-output(usdt usdc 1 [pancake-v3-factory] [pancake-v3-init-code] [uniswap-v3-fee-lowest]);"
                 )
             ),
             expectedStack,
