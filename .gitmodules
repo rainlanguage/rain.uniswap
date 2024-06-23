@@ -7,3 +7,4 @@
 [submodule "lib/view-quoter-v3.git"]
 	path = lib/view-quoter-v3.git
 	url = https://github.com/rainlanguage/view-quoter-v3.git
+	branch = 2024-06-23-loose-decode-slot0
