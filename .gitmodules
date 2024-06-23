@@ -1,9 +1,3 @@
-[submodule "reference/lib/v2-periphery"]
-	path = reference/lib/v2-periphery
-	url = https://github.com/Uniswap/v2-periphery
-[submodule "reference/lib/v2-core"]
-	path = reference/lib/v2-core
-	url = https://github.com/Uniswap/v2-core
 [submodule "lib/rain.will-overflow"]
 	path = lib/rain.will-overflow
 	url = https://github.com/rainprotocol/rain.will-overflow
