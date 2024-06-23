@@ -4,3 +4,6 @@
 [submodule "lib/rain.interpreter"]
 	path = lib/rain.interpreter
 	url = https://github.com/rainlanguage/rain.interpreter
+[submodule "lib/view-quoter-v3.git"]
+	path = lib/view-quoter-v3.git
+	url = https://github.com/rainlanguage/view-quoter-v3.git
