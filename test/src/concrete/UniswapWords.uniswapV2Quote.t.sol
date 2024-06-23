@@ -25,11 +25,11 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         // weth
         expectedStack[3] = uint256(uint160(0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2));
         // weth equivalent to 1e18 wbtc without slippage etc.
-        expectedStack[2] = 18.37912345278325716e18;
+        expectedStack[2] = 18.347117686519845296e18;
         // timestamp
-        expectedStack[1] = 1706347127e18;
+        expectedStack[1] = 1719126179e18;
         // weth-btc
-        expectedStack[0] = 0.054409558898118408e18;
+        expectedStack[0] = 0.054504474058872404e18;
 
         checkHappy(
             bytes(
