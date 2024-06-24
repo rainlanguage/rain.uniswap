@@ -9,10 +9,10 @@
 pragma solidity =0.8.25;
 
 /// @dev Hash of the known bytecode.
-bytes32 constant BYTECODE_HASH = bytes32(0x49ebbc119e64cb41e9974f6e9ca8cd2f9fc1952e15cb2116b0a8d4fd0f447a12);
+bytes32 constant BYTECODE_HASH = bytes32(0x65acaee88297ca99aa42e9c27d66f88bcded68822ac78ec7c2f84100bf9eb24a);
 
 /// @dev The hash of the meta that describes the contract.
-bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0x8b5104dd1fbe98ad3ad2842b81a2cef88d09b514802d01dadecf2a9ef8b7e1d9);
+bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0x963e72dec6a7705efcd1fe456b09c54097a3059785074d9277bced99556da688);
 
 /// @dev Encodes the parser meta that is used to lookup word definitions.
 /// The structure of the parser meta is:
@@ -31,7 +31,7 @@ bytes32 constant DESCRIBED_BY_META_HASH = bytes32(0x8b5104dd1fbe98ad3ad2842b81a2
 /// bit count of the previous bloom filter. If we reach the end of the bloom
 /// filters then we have a miss.
 bytes constant PARSE_META =
-    hex"010000000000040000000000008800000000020000a0000000000000000000000000059852a103fd758204722c3102fe814f01b519ad007b1e62";
+    hex"010000000000040000000000008000000000020040a0000000000000000000000000059852a103fd758202a6c8bd04722c3101b519ad007b1e62";
 
 /// @dev The build depth of the parser meta.
 uint8 constant PARSE_META_BUILD_DEPTH = 1;

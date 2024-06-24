@@ -39,12 +39,12 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     " ",
                     "wbtc: 0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599,",
                     "weth: 0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2,",
-                    "wbtc-weth timestamp: uniswap-v2-spot-output-ratio<1>(wbtc weth [uniswap-v2-factory] [uniswap-v2-init-code]),"
-                    "weth-wbtc: uniswap-v2-spot-output-ratio(weth wbtc [uniswap-v2-factory] [uniswap-v2-init-code]);"
+                    "wbtc-weth timestamp: uniswap-v2-current-output-ratio<1>(wbtc weth [uniswap-v2-factory] [uniswap-v2-init-code]),"
+                    "weth-wbtc: uniswap-v2-current-output-ratio(weth wbtc [uniswap-v2-factory] [uniswap-v2-init-code]);"
                 )
             ),
             expectedStack,
-            "uniswap-v2-spot-output-ratio wbtc weth"
+            "uniswap-v2-current-output-ratio wbtc weth"
         );
     }
 
@@ -57,7 +57,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio<1>();"
+                    "_ _: uniswap-v2-current-output-ratio<1>();"
                 )
             ),
             0,
@@ -75,7 +75,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio<1>(0);"
+                    "_ _: uniswap-v2-current-output-ratio<1>(0);"
                 )
             ),
             1,
@@ -93,7 +93,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0);"
+                    "_ _: uniswap-v2-current-output-ratio<1>(0 0);"
                 )
             ),
             2,
@@ -111,7 +111,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0 0xdeadbeef);"
+                    "_ _: uniswap-v2-current-output-ratio<1>(0 0 0xdeadbeef);"
                 )
             ),
             3,
@@ -129,7 +129,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio<1>(0 0 0 0 0);"
+                    "_ _: uniswap-v2-current-output-ratio<1>(0 0 0 0 0);"
                 )
             ),
             5,
@@ -147,7 +147,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    ": uniswap-v2-spot-output-ratio<1>(0 0 0 0);"
+                    ": uniswap-v2-current-output-ratio<1>(0 0 0 0);"
                 )
             ),
             4,
@@ -165,7 +165,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_: uniswap-v2-spot-output-ratio<1>(0 0 0 0);"
+                    "_: uniswap-v2-current-output-ratio<1>(0 0 0 0);"
                 )
             ),
             4,
@@ -180,7 +180,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         checkBadInputs(
             bytes(
                 string.concat(
-                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v2-spot-output-ratio();"
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v2-current-output-ratio();"
                 )
             ),
             0,
@@ -195,7 +198,10 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
         checkBadInputs(
             bytes(
                 string.concat(
-                    "using-words-from ", address(uniswapWords).toHexString(), " ", "_: uniswap-v2-spot-output-ratio(0);"
+                    "using-words-from ",
+                    address(uniswapWords).toHexString(),
+                    " ",
+                    "_: uniswap-v2-current-output-ratio(0);"
                 )
             ),
             1,
@@ -213,7 +219,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_: uniswap-v2-spot-output-ratio(0 0);"
+                    "_: uniswap-v2-current-output-ratio(0 0);"
                 )
             ),
             2,
@@ -231,7 +237,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_: uniswap-v2-spot-output-ratio(0 0 0xdeadbeef);"
+                    "_: uniswap-v2-current-output-ratio(0 0 0xdeadbeef);"
                 )
             ),
             3,
@@ -249,7 +255,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_: uniswap-v2-spot-output-ratio(0 0 0 0 0);"
+                    "_: uniswap-v2-current-output-ratio(0 0 0 0 0);"
                 )
             ),
             5,
@@ -267,7 +273,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    ": uniswap-v2-spot-output-ratio(0 0 0 0);"
+                    ": uniswap-v2-current-output-ratio(0 0 0 0);"
                 )
             ),
             4,
@@ -285,7 +291,7 @@ contract UniswapWordsUniswapV2QuoteTest is OpTest {
                     "using-words-from ",
                     address(uniswapWords).toHexString(),
                     " ",
-                    "_ _: uniswap-v2-spot-output-ratio(0 0 0 0);"
+                    "_ _: uniswap-v2-current-output-ratio(0 0 0 0);"
                 )
             ),
             4,
