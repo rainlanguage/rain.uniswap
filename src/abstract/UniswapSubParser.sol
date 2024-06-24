@@ -63,8 +63,8 @@ library LibUniswapSubParser {
             "Computes the maximum amount of output tokens received from a given amount of input tokens from a Uniswap V2 pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, and the third is the amount of input tokens. The fourth and fifth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the prices changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         meta[SUB_PARSER_WORD_UNISWAP_V2_QUOTE] = AuthoringMetaV2(
-            "uniswap-v2-spot-output-ratio",
-            "The current instantaneous \"spot\" output ratio (output per unit of input) of a given token pair. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address. The third and fourth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the ratio changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+            "uniswap-v2-current-output-ratio",
+            "The current output ratio (output per unit of input) of a given token pair, ignoring slippage and pool fees. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address. The third and fourth inputs are the factory and init code hash for the pool. If the operand is 1 the last time the ratio changed will be returned as well. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         meta[SUB_PARSER_WORD_UNISWAP_V3_EXACT_OUTPUT] = AuthoringMetaV2(
             "uniswap-v3-quote-exact-output",
@@ -76,7 +76,7 @@ library LibUniswapSubParser {
         );
         meta[SUB_PARSER_WORD_UNISWAP_V3_TWAP] = AuthoringMetaV2(
             "uniswap-v3-twap-output-ratio",
-            "The time weighted average output ratio (output per unit of input) of a given token pair over a given period of time. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third and fourth are the start and end times ago in seconds, and the fifth is the pool fee. If the start and end times are both 0, returns the current instantaneous \"spot\" ratio rather than an average. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
+            "The time weighted average output ratio (output per unit of input) of a given token pair over a given period of time. Input/output token directions are from the perspective of the Uniswap pool contract. The first input is the input token address, the second is the output token address, the third and fourth are the start and end times ago in seconds, and the fifth is the pool fee. Note that uniswap TWAP prices suffer lossy compression as they are converted to/from \"ticks\" so are only accurate to within 0.01%. Token decimals are fetched onchain which MAY error if either token doesn't report decimals correctly."
         );
         return abi.encode(meta);
     }
