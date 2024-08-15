@@ -16,6 +16,7 @@ on:
           - mumbai
           - polygon
           - songbird
+          - linea
 
 jobs:
   deploy:
