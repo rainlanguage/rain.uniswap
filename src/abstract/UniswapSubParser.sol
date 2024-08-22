@@ -9,7 +9,7 @@ import {
 import {LibSubParse, IInterpreterExternV3} from "rain.interpreter/lib/parse/LibSubParse.sol";
 import {LibParseOperand} from "rain.interpreter/lib/parse/LibParseOperand.sol";
 import {LibConvert} from "rain.lib.typecast/LibConvert.sol";
-import {AuthoringMetaV2} from "rain.interpreter.interface/interface/IParserV1.sol";
+import {AuthoringMetaV2} from "rain.interpreter.interface/interface/IParserV2.sol";
 import {
     OPCODE_UNISWAP_V2_AMOUNT_IN,
     OPCODE_UNISWAP_V2_AMOUNT_OUT,
