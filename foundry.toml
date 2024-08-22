@@ -36,7 +36,7 @@ remappings = [
     "rain.metadata/=lib/rain.interpreter/lib/rain.metadata/src/",
     "rain.intorastring/=lib/rain.interpreter/lib/rain.intorastring/",
     "rain.sol.codegen/=lib/rain.interpreter/lib/rain.sol.codegen/src/",
-    "forge-std/=lib/rain.interpreter/lib/rain.interpreter.interface/forge-std/src/"
+    "forge-std/=lib/rain.interpreter/lib/rain.interpreter.interface/lib/forge-std/src/"
 ]
 
 [fuzz]
